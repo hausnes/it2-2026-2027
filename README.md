@@ -1,6 +1,6 @@
-# IT2 2024-2025
+# IT2 2026-2027
 
-Eksempler og oppgåver frå IT2-faget på Amalie Skram VGS, 2024-2025.
+Eksempler og oppgåver frå IT2-faget på Amalie Skram VGS, 2026-2027.
 
 ## Oppgavesamlinger
 
