@@ -1,5 +1,16 @@
 # Oppgåve: Lag stein, saks og papir. La spelaren spele mot datamaskina
 
+'''
+Tips:
+
+La spelet gå heilt til spelaren eller datamaskina har 3 "wins":
+while poengSpelar < 3 and poengDatamaskin < 3:
+...
+
+valMaskin  = random.choice(["stein", "saks", "papir"])
+
+'''
+
 import random
 
 # Sjølve spelet -- tips til å kome i gang med ein litt meir avansert løysning
