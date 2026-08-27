@@ -55,3 +55,41 @@ alder: int = "sytten"  # Python tillater dette ved kjøring
 VS Code vil derimot gi deg en rød strek eller advarsel dersom du sender inn feil datatype, forutsatt at Python-utvidelsen (Pylance) er installert.
 
 Dersom du eksempelvis bruker `mypy`, så er dette et verktøy du kan kjøre i terminalen for å sjekke at alle typer i prosjektet stemmer før du kjører koden.
+
+## Typer for funksjoner
+
+Type hints brukes ikke bare på variabler, men også på funksjonsparametere og på det en funksjon returnerer:
+
+```python
+def hils(navn: str) -> str:
+    return f"Hei, {navn}!"
+
+print(hils("Ola"))
+```
+
+Her sier `navn: str` at parameteren `navn` skal være en streng, mens `-> str` etter parentesen sier at funksjonen returnerer en streng.
+
+Dersom en funksjon ikke returnerer noe, bruker vi `-> None`:
+
+```python
+def skriv_hilsen(navn: str) -> None:
+    print(f"Hei, {navn}!")
+```
+
+Dette fungerer også sammen med standardverdier for parametere:
+
+```python
+def hils(navn: str = "verden") -> str:
+    return f"Hei, {navn}!"
+```
+
+Akkurat som med variabler sjekker ikke Python dette automatisk når koden kjører:
+
+```python
+def legg_saman(a: int, b: int) -> int:
+    return a + b
+
+resultat = legg_saman("3", "5")  # Python tillater dette ved kjøring, men gir "35" i stedet for 8
+```
+
+VS Code (Pylance) og mypy vil derimot varsle deg om at `"3"` og `"5"` ikke er `int`, slik at du oppdager feilen før du kjører koden i stedet for å bli overrasket over resultatet.
