@@ -52,7 +52,13 @@ Python sjekker derimot ikke typer automatisk når koden kjører (runtime). Det b
 alder: int = "sytten"  # Python tillater dette ved kjøring
 ```
 
-VS Code vil derimot gi deg en rød strek eller advarsel dersom du sender inn feil datatype, forutsatt at Python-utvidelsen (Pylance) er installert.
+VS Code vil derimot gi deg en rød strek eller advarsel dersom du sender inn feil datatype, forutsatt at Python-utvidelsen (Pylance) er installert, og aktivert. Når det gjelder aktiveringen, så fant `Nikolai` ut av dette:
+
+> File > Preferences > Settings - og skriv deretter inn `python.analysis.typeCheckingMode` (eller bla deg frem til Pylance). Endre til en annen verdi enn **off**, typisk **strict**.
+
+<img src="pylance-type-checking.png" width="400px">
+
+<!-- ![skjermbilde-pylance-type-checking](pylance-type-checking.png) -->
 
 Dersom du eksempelvis bruker `mypy`, så er dette et verktøy du kan kjøre i terminalen for å sjekke at alle typer i prosjektet stemmer før du kjører koden.
 
