@@ -1,13 +1,15 @@
 # Konsept til eit særs enkelt tekstbasert eventyrspel
 
 spillerLever = True
+spillerVant = False
 
 valg = input("Du står ved et veikryss. Går du til høyre (h) eller venstre (v)? ")
 
-while spillerLever:
+while spillerLever and not spillerVant:
     if valg == 'h':
         print("Du finner en skatt! Spillet er ferdig.")
-        break # Hopper ut av while-loopen
+        spillerVant = True
+        # break # Hopper ut av while-loopen
     elif valg == 'v':
         print("Du møter en drage. Vil du kjempe (k) eller flykte (f)?")
         valg2 = input()
