@@ -72,8 +72,6 @@ match maned:
         print("Haust")
 ```
 
-Ein stor fordel her: Python "fell" aldri gjennom til neste case slik som t.d. Java kan gjere om du gløymer `break`. Berre éin case blir køyrt.
-
 ## Match-case fungerer på meir enn tal
 
 Ein av dei store fordelane med `match` samanlikna med switch i andre språk, er at han fungerer fint på strengar òg:
@@ -265,5 +263,3 @@ else:
 ```
 
 Her ser du at når case-ane er bygd opp av `if`-vilkår (guards) i staden for konkrete verdiar, blir `match`-versjonen nesten identisk med if-elif-versjonen — berre med litt anna syntaks. Dette illustrerer poenget frå før: `match` gir størst gevinst når du matchar mot konkrete, kjende verdiar (som i oppgåve 1-3), ikkje når du uansett treng samanlikningar som `>=`.
-
-
