@@ -284,3 +284,59 @@ print()
 ```
 
 </details>
+
+---
+
+## Del C: Meir øving
+
+### Oppgåve 11 ⭐⭐ (stein, saks, papir — simulering)
+Skriv eit program som gjennomfører 10 000 tilfeldige stein-saks-papir-utfall (bruk `random.choice(["stein", "saks", "papir"])`), og tel kor mange gonger kvart av dei tre utfalla forekjem. Bruk ei `for`-løkke som køyrer 10 000 gonger, og tre teljarar (éin for kvart val) som du oppdaterer undervegs. Skriv til slutt ut kor mange gonger "stein", "saks" og "papir" blei trekt.
+
+<details>
+<summary>💡 Løysingsforslag</summary>
+
+```python
+import random
+
+antallStein = 0
+antallSaks = 0
+antallPapir = 0
+
+for i in range(10_000):
+    utfall = random.choice(["stein", "saks", "papir"])
+
+    if utfall == "stein":
+        antallStein += 1
+    elif utfall == "saks":
+        antallSaks += 1
+    else:
+        antallPapir += 1
+
+print(f"Stein: {antallStein}")
+print(f"Saks: {antallSaks}")
+print(f"Papir: {antallPapir}")
+```
+
+</details>
+
+### Oppgåve 12 ⭐⭐ (KI-chatbot — sjekk av meldinga)
+Lag eit program som ber brukaren skrive ei melding til ein KI-chatbot (bruk `input()`). Sjekk deretter meldinga:
+- Viss meldinga inneheld bokstavane æ, ø eller å, skal programmet skrive ut ei melding om dette.
+- Viss meldinga **ikkje** sluttar med eit spørsmålsteikn (`?`), skal programmet minne brukaren på at dei må vere høflege og avslutte spørsmålet med eit spørsmålsteikn.
+
+Tips: du kan sjekke om ein bokstav finst i ein tekst med `"æ" in melding`, og om ein tekst sluttar med noko bestemt med `melding.endswith("?")`.
+
+<details>
+<summary>💡 Løysingsforslag</summary>
+
+```python
+melding = input("Skriv meldinga di til KI-chatboten: ")
+
+if "æ" in melding or "ø" in melding or "å" in melding:
+    print("Merk: meldinga di inneheld æ, ø eller å.")
+
+if not melding.strip().endswith("?"):
+    print("Hugs å vere høfleg, og avslutt spørsmålet ditt med eit spørsmålsteikn!")
+```
+
+</details>
