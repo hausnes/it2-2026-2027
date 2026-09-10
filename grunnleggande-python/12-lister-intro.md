@@ -280,6 +280,62 @@ print(partall)  # [2, 4, 6, 8, 10]
 
 List comprehension er ikke pensum i seg selv her, men det er lurt å kunne *lese* den — du vil møte den mye i andres Python-kode.
 
+## Steg 11 (bonus): Statistikk og analyse av lister
+
+Python har flere innebygde funksjoner som gjør det unødvendig å skrive egne løkker for å analysere tall i en liste.
+
+**Antall, sum, høyeste og laveste verdi:**
+
+```python
+tall = [4, 8, 15, 16, 23, 42]
+
+print(len(tall))  # 6   - antall elementer
+print(sum(tall))  # 108 - summen av alle tallene
+print(max(tall))  # 42  - høyeste verdi
+print(min(tall))  # 4   - laveste verdi
+```
+
+**Gjennomsnitt** finnes ikke som egen innebygd funksjon, men er lett å regne ut selv ved å kombinere `sum()` og `len()`. `round()` er nyttig for å avrunde resultatet til et gitt antall desimaler:
+
+```python
+tall = [4, 8, 15, 16, 23, 42]
+gjennomsnitt = sum(tall) / len(tall)
+print(gjennomsnitt)              # 18.0
+print(round(gjennomsnitt, 1))    # 18.0 avrundet til én desimal
+```
+
+**Telle forekomster** av en bestemt verdi med `count()`, og **finne indeksen** til en verdi med `index()`:
+
+```python
+karakterer = [4, 5, 3, 5, 6, 5, 2]
+
+print(karakterer.count(5))  # 3 - femmeren forekommer tre ganger
+print(karakterer.index(5))  # 1 - den FØRSTE femmeren ligger på indeks 1
+```
+
+**max() og min() med `key`**: du kan også bruke `max()`/`min()` på lister som ikke er tall, ved å fortelle Python hva den skal sammenligne på. Her finner vi det lengste og korteste navnet i en liste med `key=len`:
+
+```python
+navn = ["Kristoffer", "Eli", "Bernt-Åge", "Nora"]
+
+print(max(navn, key=len))  # Kristoffer - det lengste navnet
+print(min(navn, key=len))  # Eli - det korteste navnet
+```
+
+**Bonus (litt videre­kommen):** trenger du median (midterste verdi) eller typetall (mest vanlige verdi), finnes ikke det som innebygde funksjoner — da kan biblioteket `statistics` hjelpe deg:
+
+```python
+import statistics
+
+tall = [4, 8, 15, 16, 23, 42]
+
+print(statistics.mean(tall))      # 18    - gjennomsnitt
+print(statistics.median(tall))    # 15.5  - medianen (midterste verdi i sortert rekkefølge)
+print(statistics.mode([1, 2, 2, 3]))  # 2 - den mest vanlige verdien (typetall)
+```
+
+`statistics.median()` sorterer lista selv, så du trenger ikke sortere den på forhånd.
+
 ## Tuppel — en liste som ikke kan endres
 
 Et **tuppel** (`tuple`) ligner på en liste, men er **immutable** — når det først er laget, kan innholdet ikke endres. Det skrives med runde parenteser `()` i stedet for hakeparenteser:
@@ -349,6 +405,11 @@ Legg merke til at rekkefølgen i et sett ikke er garantert — hvis du trenger r
 | Hente en del av lista | `liste[start:stopp]` |
 | Sortere lista selv (endrer originalen) | `liste.sort()` |
 | Få en ny, sortert liste (originalen uendret) | `sorted(liste)` |
+| Sum, høyeste og laveste verdi | `sum(liste)`, `max(liste)`, `min(liste)` |
+| Gjennomsnitt | `sum(liste) / len(liste)` |
+| Telle forekomster av en verdi | `liste.count(verdi)` |
+| Finne indeksen til en verdi | `liste.index(verdi)` |
+| Median eller typetall | `statistics.median(liste)`, `statistics.mode(liste)` |
 | Kopiere en liste (uten nøstede lister) | `liste.copy()` |
 | Kopiere en liste med nøstede lister | `copy.deepcopy(liste)` |
 | Data som ikke skal kunne endres | tuppel i stedet for liste |
@@ -363,6 +424,7 @@ Legg merke til at rekkefølgen i et sett ikke er garantert — hvis du trenger r
 5. Lag en liste `original = [1, 2, 3]`. Lag en kopi kalt `feil_kopi` med `feil_kopi = original` (uten `.copy()`), legg til et tall i `feil_kopi`, og skriv ut begge listene. Forklar med egne ord hvorfor `original` også endret seg.
 6. (Litt videre­kommen) Lag en 3x3-matrise som en liste av lister (ni tall, valgfritt hvilke). Bruk to `for`-løkker etter hverandre (en ytre og en indre) til å skrive ut hvert enkelt tall.
 7. (Bonus) Bruk list comprehension til å lage en liste med kvadrattallene til tallene fra 1 til 10 (altså `[1, 4, 9, ..., 100]`).
+8. Lag en liste med seks eksamenskarakterer, for eksempel `[4, 5, 3, 6, 5, 4]`. Skriv ut høyeste karakter, laveste karakter, og gjennomsnittskarakteren avrundet til én desimal med `round()`. Bruk deretter `count()` til å finne ut hvor mange ganger karakteren 4 forekommer.
 
 ## Løsningsforslag
 
@@ -432,4 +494,15 @@ for rad in matrise:
 ```python
 kvadrater = [t ** 2 for t in range(1, 11)]
 print(kvadrater)
+```
+
+**Oppgave 8**
+
+```python
+karakterer = [4, 5, 3, 6, 5, 4]
+
+print("Høyeste:", max(karakterer))
+print("Laveste:", min(karakterer))
+print("Gjennomsnitt:", round(sum(karakterer) / len(karakterer), 1))
+print("Antall firere:", karakterer.count(4))
 ```
