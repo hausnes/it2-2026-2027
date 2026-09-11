@@ -425,6 +425,21 @@ Legg merke til at rekkefølgen i et sett ikke er garantert — hvis du trenger r
 6. (Litt videre­kommen) Lag en 3x3-matrise som en liste av lister (ni tall, valgfritt hvilke). Bruk to `for`-løkker etter hverandre (en ytre og en indre) til å skrive ut hvert enkelt tall.
 7. (Bonus) Bruk list comprehension til å lage en liste med kvadrattallene til tallene fra 1 til 10 (altså `[1, 4, 9, ..., 100]`).
 8. Lag en liste med seks eksamenskarakterer, for eksempel `[4, 5, 3, 6, 5, 4]`. Skriv ut høyeste karakter, laveste karakter, og gjennomsnittskarakteren avrundet til én desimal med `round()`. Bruk deretter `count()` til å finne ut hvor mange ganger karakteren 4 forekommer.
+9. Under ser du flyreisetider (i minutter) mellom fire norske flyplasser, lagret som en liste med navn og en tilhørende multidimensjonal liste, der `reisetider[i][j]` er reisetiden fra flyplass `i` til flyplass `j` (en flyplass har alltid reisetid `0` til seg selv):
+
+    ```python
+    flyplasser = ["Flesland", "Gardermoen", "Værnes", "Sola"]
+    reisetider = [
+        [0, 55, 70, 50],
+        [55, 0, 60, 55],
+        [70, 60, 0, 80],
+        [50, 55, 80, 0],
+    ]
+    ```
+
+    a) Finn indeksen til `"Flesland"` og `"Værnes"` med `.index()`, og bruk dem til å skrive ut reisetiden mellom de to flyplassene.
+    b) Bruk to `for`-løkker etter hverandre (en ytre og en indre, begge med `enumerate()`) til å skrive ut alle reisene på formen `Fra Flesland til Gardermoen: 55 minutter`. Hopp over cellene der reisetiden er `0`.
+    c) Finn og skriv ut den lengste reisetiden i hele tabellen, og hvilke to flyplasser den er mellom.
 
 ## Løsningsforslag
 
@@ -505,4 +520,38 @@ print("Høyeste:", max(karakterer))
 print("Laveste:", min(karakterer))
 print("Gjennomsnitt:", round(sum(karakterer) / len(karakterer), 1))
 print("Antall firere:", karakterer.count(4))
+```
+
+**Oppgave 9**
+
+```python
+flyplasser = ["Flesland", "Gardermoen", "Værnes", "Sola"]
+reisetider = [
+    [0, 55, 70, 50],
+    [55, 0, 60, 55],
+    [70, 60, 0, 80],
+    [50, 55, 80, 0],
+]
+
+# a)
+i = flyplasser.index("Flesland")
+j = flyplasser.index("Værnes")
+print(f"Flesland til Værnes: {reisetider[i][j]} minutter")
+
+# b)
+for i, fra in enumerate(flyplasser):
+    for j, til in enumerate(flyplasser):
+        if reisetider[i][j] != 0:
+            print(f"Fra {fra} til {til}: {reisetider[i][j]} minutter")
+
+# c)
+lengste = 0
+par = ("", "")
+for i, fra in enumerate(flyplasser):
+    for j, til in enumerate(flyplasser):
+        if reisetider[i][j] > lengste:
+            lengste = reisetider[i][j]
+            par = (fra, til)
+
+print(f"Lengste reisetid: {lengste} minutter, mellom {par[0]} og {par[1]}")
 ```
