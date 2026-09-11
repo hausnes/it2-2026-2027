@@ -5,7 +5,7 @@
  * og lagrer det som en lokal JSON-fil.
  *
  * Bruk:
- *   1. Fyll inn STEAM_API_KEY og STEAM_ID64 nedenfor. https://steamcommunity.com/dev/apikey
+ *   1. Fyll inn STEAM_API_KEY og STEAM_ID64 nedenfor. https://steamcommunity.com/dev/apikey og https://steamid.io/ for steamid64
  *   2. Kjør: node hent-steam-spill.js
  *   3. Resultatet havner i games.json i samme mappe.
  *
