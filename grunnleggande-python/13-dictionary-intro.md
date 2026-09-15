@@ -60,7 +60,40 @@ print(person.get("alder", 0))      # 0     -  bruker standardverdien du gir
 print(person.get("fornavn", 0))    # Per   -  finnes den, brukes den vanlige verdien
 ```
 
-## Steg 3: Endre, legge til og fjerne
+## Steg 3: Sjekke om en nøkkel finnes
+
+Med `in`-operatoren kan du sjekke om en **nøkkel** finnes i dictionaryen:
+
+```python
+person = {"fornavn": "Per", "etternavn": "Christensen"}
+
+if "fornavn" in person:
+    print("Nøkkelen 'fornavn' finnes.")
+
+if "alder" not in person:
+    print("Nøkkelen 'alder' finnes IKKE.")
+```
+
+**Obs!** I en liste sjekker `in` om en *verdi* finnes (`3 in [1, 2, 3]`). I en dictionary sjekker `in` om en *nøkkel* finnes — ikke en verdi:
+
+```python
+print("Per" in person)          # False  -  "Per" er en VERDI, ikke en nøkkel
+print("fornavn" in person)      # True   -  "fornavn" ER en nøkkel
+print("Per" in person.values()) # True   -  her sjekker vi eksplisitt blant verdiene
+```
+
+Du så allerede i forrige steg at `get()` returnerer `None` når nøkkelen ikke finnes. Det betyr at du også kan bruke `get()` sammen med `if`/`else` for å sjekke om en nøkkel finnes:
+
+```python
+if person.get("alder") is not None:
+    print("Nøkkelen 'alder' finnes.")
+else:
+    print("Nøkkelen 'alder' finnes IKKE.")
+```
+
+Forskjellen på de to måtene: `in` svarer rent på *om* nøkkelen finnes, mens `get()` i tillegg henter verdien — praktisk hvis du uansett skal bruke den videre. Én fallgruve med `get()`-varianten: den gir feil svar dersom nøkkelen finnes, men verdien faktisk *er* `None`. Da er `in` det trygge valget.
+
+## Steg 4: Endre, legge til og fjerne
 
 Dictionaries er, i likhet med lister, **mutable** — du kan endre innholdet direkte.
 
@@ -92,28 +125,6 @@ print("Fjernet:", etternavn)
 ```python
 alder = person.pop("alder", "ukjent")
 print(alder)  # ukjent  -  "alder" fantes ikke, men det krasjer ikke
-```
-
-## Steg 4: Sjekke om en nøkkel finnes
-
-Med `in`-operatoren kan du sjekke om en **nøkkel** finnes i dictionaryen:
-
-```python
-person = {"fornavn": "Per", "etternavn": "Christensen"}
-
-if "fornavn" in person:
-    print("Nøkkelen 'fornavn' finnes.")
-
-if "alder" not in person:
-    print("Nøkkelen 'alder' finnes IKKE.")
-```
-
-**Obs!** I en liste sjekker `in` om en *verdi* finnes (`3 in [1, 2, 3]`). I en dictionary sjekker `in` om en *nøkkel* finnes — ikke en verdi:
-
-```python
-print("Per" in person)          # False  -  "Per" er en VERDI, ikke en nøkkel
-print("fornavn" in person)      # True   -  "fornavn" ER en nøkkel
-print("Per" in person.values()) # True   -  her sjekker vi eksplisitt blant verdiene
 ```
 
 ## Steg 5: Gå gjennom en dictionary (løkker)
