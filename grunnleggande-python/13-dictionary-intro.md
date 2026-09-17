@@ -52,15 +52,15 @@ Prøver du å hente en nøkkel som ikke finnes, får du en feilmelding (`KeyErro
 print(person["alder"])  # KeyError: 'alder'
 ```
 
-Er du usikker på om nøkkelen finnes, er `get()` et tryggere alternativ — den returnerer `None` (eller en verdi du selv bestemmer) i stedet for å krasje:
+## Steg 3: Sjekke om en nøkkel finnes
+
+Er du usikker på om nøkkelen finnes, er `get()` et godt alternativ. Den returnerer `None` (eller en verdi du selv bestemmer) i stedet for å krasje:
 
 ```python
 print(person.get("alder"))         # None  -  finnes ikke, men ingen feil
 print(person.get("alder", 0))      # 0     -  bruker standardverdien du gir
 print(person.get("fornavn", 0))    # Per   -  finnes den, brukes den vanlige verdien
 ```
-
-## Steg 3: Sjekke om en nøkkel finnes
 
 Med `in`-operatoren kan du sjekke om en **nøkkel** finnes i dictionaryen:
 
