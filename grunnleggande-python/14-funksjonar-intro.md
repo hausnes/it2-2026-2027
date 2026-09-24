@@ -207,6 +207,21 @@ print(x)  # 20 - nå endret
 
 **Obs!** Det regnes som god praksis å unngå `global` der du kan. Send heller inn verdier som parametere, og ta dem ut igjen som returverdier — det gjør koden lettere å forstå og å teste.
 
+I stedet for `endre_x_globalt()` ovenfor, kan vi skrive funksjonen slik at den tar imot verdien den skal jobbe med, og returnerer den nye verdien:
+
+```python
+def legg_til(x, tall):
+    return x + tall
+
+x = 10
+x = legg_til(x, 10)
+print(x)  # 20
+```
+
+Denne funksjonen er ikke avhengig av at det finnes en global variabel `x` i det hele tatt — den fungerer uansett hvilket tall du sender inn, og kan derfor gjenbrukes og testes uavhengig av resten av programmet. Det er nettopp dette som er poenget: en funksjon som kun forholder seg til sine egne parametere er forutsigbar, mens en funksjon som endrer globale variabler kan gi uventede bivirkninger andre steder i koden.
+
+> Når du senere skal lære om objektorientert programmering (OOP), vil du se at objekter har sine egne variabler (attributter) som metodene deres kan lese og endre trygt — uten å bruke `global`. Det er en av grunnene til at OOP gjør det lettere å strukturere større program.
+
 ## Rekursjon
 En funksjon kan kalle seg selv. Dette kalles rekursjon. En rekursiv funksjon må alltid ha et **basistilfelle** (en betingelse som stopper rekursjonen) — ellers kaller funksjonen seg selv i det uendelige, og du får en feilmelding (`RecursionError`).
 
