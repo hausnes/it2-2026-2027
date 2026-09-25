@@ -92,10 +92,33 @@ def hils(navn: str = "verden") -> str:
 Akkurat som med variabler sjekker ikke Python dette automatisk når koden kjører:
 
 ```python
-def legg_saman(a: int, b: int) -> int:
+def legg_sammen(a: int, b: int) -> int:
     return a + b
 
-resultat = legg_saman("3", "5")  # Python tillater dette ved kjøring, men gir "35" i stedet for 8
+resultat = legg_sammen("3", "5")  # Python tillater dette ved kjøring, men gir "35" i stedet for 8
 ```
 
 VS Code (Pylance) og mypy vil derimot varsle deg om at `"3"` og `"5"` ikke er `int`, slik at du oppdager feilen før du kjører koden i stedet for å bli overrasket over resultatet.
+
+Dersom vi returnerer det ene, ELLER det andre, kan vi også spesifisere dette:
+
+```python
+# Returnere en verdi ELLER None
+
+telefonliste = {
+    "Ola": "912 34 567",
+    "Kari": "987 65 432",
+}
+
+def finn_nummer(navn: str) -> str | None:
+    if navn in telefonliste:
+        return telefonliste[navn]  # fant navnet -> returnerer en str
+    return None  # fant ikke navnet -> returnerer None
+
+nummer = finn_nummer("Per")
+
+if nummer is None:
+    print("Fant ikke Per i telefonlisten")
+else:
+    print(f"Nummeret til Per er {nummer}")
+```
