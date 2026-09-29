@@ -248,6 +248,21 @@ def fak(n):
         return svar           # 3. Lever svaret tilbake til den som spurte
 ```
 
+> **Notis:** Fakultet kan like gjerne regnes ut med en vanlig `while`-løkke. Da ganger vi sammen tallene ett for ett, i stedet for at funksjonen kaller seg selv:
+>
+> ```python
+> def fak(n):
+>     svar = 1
+>     while n > 0:
+>         svar = svar * n
+>         n = n - 1
+>     return svar
+>
+> print(fak(5))  # Output: 120
+> ```
+>
+> Alt som kan løses med rekursjon kan også løses med løkker. Rekursjon gir ofte kortere og mer elegant kode for problemer som naturlig kan deles opp i mindre versjoner av seg selv, mens løkker ofte er enklere å lese og ikke har noen grense for hvor mange «runder» de kan ta (Python stopper rekursjon etter ca. 1000 kall).
+
 Et annet eksempel, en nedtelling:
 
 ```python
