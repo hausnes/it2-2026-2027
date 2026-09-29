@@ -236,6 +236,18 @@ def fak(n):
 print(fak(5))  # Output: 120
 ```
 
+Dersom du syns eksempelet over er litt vanskelig, så kan det kanskje hjelpe å ta det over litt flere steg:
+
+```python
+def fak(n):
+    if n == 0:
+        return 1
+    else:
+        resten = fak(n - 1)   # 1. Spør: "hva er fakultetet av tallet under meg?"
+        svar = n * resten     # 2. Gang svaret med n
+        return svar           # 3. Lever svaret tilbake til den som spurte
+```
+
 Et annet eksempel, en nedtelling:
 
 ```python
@@ -252,6 +264,47 @@ nedtelling(3)
 # 1
 # Nå!
 ```
+
+I nedtellingen skjer alt *før* det rekursive kallet. Men hva skjer med kode som står *etter* kallet? Her er en «trapp» som går ned og opp igjen:
+
+```python
+def trapp(n):
+    if n == 0:                  # basistilfelle
+        print("  Bunnen nådd!")
+    else:
+        print("Ned", n)
+        trapp(n - 1)            # rekursivt steg – her venter funksjonen
+        print("Opp", n)         # kjøres først når kallet over er ferdig
+
+trapp(3)
+# Ned 3
+# Ned 2
+# Ned 1
+#   Bunnen nådd!
+# Opp 1
+# Opp 2
+# Opp 3
+```
+
+Legg merke til at «Opp»-linjene kommer i **omvendt** rekkefølge. Hvert kall av `trapp` stopper opp ved `trapp(n - 1)` og *venter* til kallet under er helt ferdig. Først da fortsetter det der det slapp, med sin egen verdi av `n`. Det er nøyaktig det samme som skjer i `fak`: `return n * fak(n-1)` kan ikke returnere før `fak(n-1)` har kommet tilbake med et svar.
+
+Slik kan du spore hva som skjer når du kaller `fak(4)`. Innrykket viser hvor «dypt» vi er i kallene:
+
+```
+fak(4) venter på fak(3) ...
+   fak(3) venter på fak(2) ...
+      fak(2) venter på fak(1) ...
+         fak(1) venter på fak(0) ...
+            fak(0) = 1                 ← basistilfellet, ingen nye kall
+         fak(1) = 1 * 1 = 1
+      fak(2) = 2 * 1 = 2
+   fak(3) = 3 * 2 = 6
+fak(4) = 4 * 6 = 24
+```
+
+På vei **ned** blir det bare stilt spørsmål, og ingen har et svar ennå. På vei **opp** regner hvert kall ut sitt eget svar med sin egen `n` og svaret det fikk fra kallet under. Sammenlign med «Ned» og «Opp» i `trapp`.
+
+> 💡 **Tips:** Prøv å lage en slik sporing for hånd på papir, for eksempel for `fak(3)` eller `trapp(2)`. Det er en av de beste måtene å forstå rekursjon på.
 
 ## Dokumentasjonsstrenger
 Dokumentasjonsstrenger (docstrings) brukes til å dokumentere funksjoner.
