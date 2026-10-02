@@ -2,7 +2,7 @@
 
 **Tid:** 2 timer · **Maks poeng:** 44
 
-**Hjelpemidler:** Alle ressursene i mappa `grunnleggande-python` og lærebøkene.
+**Hjelpemidler:** Alle ressursene i mappa `grunnleggande-python` og lærebøkene, samt egen kode. Ikke KI.
 
 ## Praktisk informasjon
 
