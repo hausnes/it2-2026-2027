@@ -367,6 +367,16 @@ print(a)          # {'navn': 'Per', 'alder': 42}  <- uendret
     a) Bruk en `for`-løkke med `.items()` til å skrive ut hver elevs navn og summen av poengene deres (bruk `sum()`), på formen `Kari: 60 poeng`.
     b) Lag en ny, tom dictionary `snitt`, og fyll den med hver elevs *gjennomsnittlige* poengsum per delprøve, avrundet til én desimal med `round()`.
     c) Finn og skriv ut navnet på eleven med høyest total poengsum. Du kan enten holde styr på dette selv i løkka, eller bruke `max()` med `key` på `resultater.items()`.
+10. (Bonus, bruker funksjoner fra [14-funksjonar-intro.md](14-funksjonar-intro.md)) Tekstanalyse. Ta utgangspunkt i denne teksten:
+
+    ```python
+    tekst = "Python er et populært språk. Mange lærer Python på skolen, og mange bruker Python på jobb. Et språk som er lett å lære, er et språk mange vil bruke. Er Python lett? Mange mener det!"
+    ```
+
+    a) Lag en funksjon `rens_tekst(tekst)` som gjør om teksten til små bokstaver, fjerner tegnene `.` `,` `!` og `?`, og **returnerer** en liste med alle ordene.
+    b) Lag en funksjon `tell_ord(ordliste)` som tar inn lista fra a) og **returnerer** en dictionary der nøkkelen er ordet og verdien er hvor mange ganger ordet forekommer.
+    c) Bruk resultatet fra b) til å skrive ut de **fem** vanligste ordene og hvor mange ganger de forekommer, med det vanligste først.
+    d) Skriv ut hvor mange ord teksten består av totalt, og hvor mange **ulike** ord den inneholder.
 
 ## Løsningsforslag
 
@@ -490,3 +500,49 @@ print(f"Høyest poengsum: {beste_navn} med {beste_sum} poeng")
 beste_navn = max(resultater, key=lambda navn: sum(resultater[navn]))
 print(f"Høyest poengsum: {beste_navn} med {sum(resultater[beste_navn])} poeng")
 ```
+
+**Oppgave 10**
+
+```python
+tekst = "Python er et populært språk. Mange lærer Python på skolen, og mange bruker Python på jobb. Et språk som er lett å lære, er et språk mange vil bruke. Er Python lett? Mange mener det!"
+
+# a)
+def rens_tekst(tekst: str) -> list[str]:
+    tekst = tekst.lower()
+    for tegn in ".,!?":
+        tekst = tekst.replace(tegn, "")
+    return tekst.split()
+
+# b)
+def tell_ord(ordliste: list[str]) -> dict[str, int]:
+    antall = {}
+    for ordet in ordliste:
+        antall[ordet] = antall.get(ordet, 0) + 1
+    return antall
+
+ordliste = rens_tekst(tekst)
+antall = tell_ord(ordliste)
+
+# c)
+sortert = sorted(antall.items(), key=lambda par: par[1], reverse=True)
+for ordet, forekomster in sortert[:5]:
+    print(f"{ordet}: {forekomster}")
+
+# d)
+print(f"Antall ord: {len(ordliste)}")
+print(f"Antall ulike ord: {len(set(ordliste))}")
+```
+
+Utskrift:
+
+```
+python: 4
+er: 4
+mange: 4
+et: 3
+språk: 3
+Antall ord: 35
+Antall ulike ord: 20
+```
+
+Rekkefølgen mellom ord som forekommer like mange ganger, kan variere. Glemmer du `.lower()`, blir `Mange` og `mange` telt som to ulike ord.
