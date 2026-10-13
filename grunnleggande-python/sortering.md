@@ -91,11 +91,11 @@ Legg merke til at `"Aprikos"` og `"Eple"` (store forbokstaver) havner *før* `"b
 
 ## Steg 4: Egendefinert sortering med `key` og `lambda`
 
-Noen ganger vil du ikke sortere elementene direkte, men etter en *egenskap* ved dem — for eksempel sortere ord etter lengde, ikke alfabetisk. Da bruker du argumentet `key`, som forteller Python *hva* den skal sammenligne på for hvert element.
+Noen ganger vil du ikke sortere elementene direkte, men etter en *egenskap* ved dem, for eksempel sortere ord etter lengde, ikke alfabetisk. Da bruker du argumentet `key`, som forteller Python *hva* den skal sammenligne på for hvert element.
 
 ```python
-ord = ["banan", "kiwi", "fiken", "pære"]
-print(sorted(ord, key=len))  # ['kiwi', 'pære', 'banan', 'fiken']
+ord = ["banan", "kiwi", "fiken", "pære", "aprikos"]
+print(sorted(ord, key=len))  # ['kiwi', 'pære', 'banan', 'fiken', 'aprikos']
 ```
 
 Her regner Python ut `len(element)` for hvert element i lista, og sorterer etter *det* — men resultatet inneholder fortsatt de originale ordene, ikke lengdene deres.
@@ -226,7 +226,7 @@ for elev in sorted(elever, key=lambda e: (e["klasse"], e["navn"])):
 
 **Obs!** Både `.sort()` og `sorted()` med `key` *flytter hele dictionaryen* som ett element — de endrer ikke innholdet i den, bare rekkefølgen dictionaryene kommer i på ytre nivå.
 
-## Steg 9 (bonus): Stabil sortering
+## Steg 9 (bonus): Stabil sortering (NB: Ikke pensum!)
 
 Pythons sortering er **stabil**. Det betyr at elementer som er *like* etter sorteringskriteriet, beholder sin **opprinnelige innbyrdes rekkefølge** i resultatet. Dette høres kanskje ut som en detalj, men det er faktisk nyttig: du kan sortere i flere omganger, fra minst til mest viktig kriterium, og få samme resultat som med én kombinert tupel-nøkkel:
 
@@ -269,30 +269,12 @@ Fordi den siste sorteringen (på klasse) er stabil, forstyrrer den ikke navnesor
 
 ## Øvingsoppgaver
 
-1. Lag en liste med tallene `[7, 2, 9, 4, 1]`. Sorter lista stigende med `.sort()`, skriv den ut, sorter den deretter synkende og skriv ut på nytt.
-2. Lag en liste med tallene `[23, 4, 100, 9, 56]` og skriv ut en sortert kopi med `sorted()` uten å endre originallista. Skriv ut *begge* listene for å vise forskjellen (dette er samme "triks" som gjør at Python ikke trenger noe eget sorteringstriks for tall, i motsetning til JavaScript).
-3. Lag en liste med ordene `["epler", "kiwi", "fiken", "sitron", "fe"]`. Skriv ut lista sortert etter *lengde* på ordene, med `key=len`.
-4. Lag en liste med navnene `["olsen", "Berg", "aas", "Nilsen"]`. Skriv ut lista sortert vanlig med `sorted()`, og deretter sortert uavhengig av store/små bokstaver med `key=str.lower`. Forklar med egne ord hvorfor de to resultatene er forskjellige.
-5. Lag en liste med tupler `[("Ola", 88), ("Kari", 95), ("Nora", 72), ("Jonas", 95)]` som representerer navn og poengsum. Skriv ut lista sortert etter poengsum, høyest først. Hvem havner øverst av de to med poengsum 95, og hvorfor (tenk på stabil sortering)?
-6. (Litt videre­kommen) Ta utgangspunkt i lista fra oppgave 5. Bruk en lambda til å sortere listen etter *siste bokstav* i navnet i stedet for poengsum.
-7. (Litt videre­kommen) Lag en dictionary `befolkning` med minst fire norske byer som nøkler og innbyggertall som verdier. Skriv ut byene sortert etter innbyggertall, flest først, på formen `Oslo: 697899`.
-8. (Avansert) Lag en liste av dictionaries `elever`, der hver dictionary har feltene `"navn"`, `"klasse"` og `"karakter"` (minst fem elever, gjerne med noen som går i samme klasse). Skriv ut elevene sortert etter klasse, og innad i hver klasse etter karakter (høyest først). Bruk en tupel som `key`, og husk minustrikset fra steg 6 for å få karakteren synkende samtidig som klassen er stigende.
-9. (Avansert) Under ser du resultater fra en hopp-konkurranse, der hver utøver har flere forsøk:
+### Oppgave 1
 
-    ```python
-    hopp = [
-        {"navn": "Kari", "forsøk": [5.2, 5.8, 5.4]},
-        {"navn": "Ola", "forsøk": [5.9, 5.1, 6.0]},
-        {"navn": "Nora", "forsøk": [5.5, 5.6, 5.3]},
-    ]
-    ```
+Lag en liste med tallene `[7, 2, 9, 4, 1]`. Sorter lista stigende med `.sort()`, skriv den ut, sorter den deretter synkende og skriv ut på nytt.
 
-    a) Skriv ut utøverne sortert etter deres *beste* forsøk (bruk `max()` inne i lambdaen), best først.
-    b) Lag en ny, sortert liste av dictionaries der hver dictionary i tillegg har fått et nytt felt `"beste"` med utøverens beste resultat (bruk en løkke, ikke comprehension, hvis du ikke har hatt det ennå).
-
-## Løsningsforslag
-
-**Oppgave 1**
+<details>
+<summary>💡 Løsningsforslag</summary>
 
 ```python
 tall = [7, 2, 9, 4, 1]
@@ -303,7 +285,14 @@ tall.sort(reverse=True)
 print(tall)  # [9, 7, 4, 2, 1]
 ```
 
-**Oppgave 2**
+</details>
+
+### Oppgave 2
+
+Lag en liste med tallene `[23, 4, 100, 9, 56]` og skriv ut en sortert kopi med `sorted()` uten å endre originallista. Skriv ut *begge* listene for å vise forskjellen (dette er samme "triks" som gjør at Python ikke trenger noe eget sorteringstriks for tall, i motsetning til JavaScript).
+
+<details>
+<summary>💡 Løsningsforslag</summary>
 
 ```python
 tall = [23, 4, 100, 9, 56]
@@ -313,14 +302,28 @@ print("Original:", tall)             # [23, 4, 100, 9, 56]  -  uendret
 print("Sortert kopi:", sortert_tall)  # [4, 9, 23, 56, 100]
 ```
 
-**Oppgave 3**
+</details>
+
+### Oppgave 3
+
+Lag en liste med ordene `["epler", "kiwi", "fiken", "sitron", "fe"]`. Skriv ut lista sortert etter *lengde* på ordene, med `key=len`.
+
+<details>
+<summary>💡 Løsningsforslag</summary>
 
 ```python
 ord = ["epler", "kiwi", "fiken", "sitron", "fe"]
 print(sorted(ord, key=len))  # ['fe', 'kiwi', 'epler', 'fiken', 'sitron']
 ```
 
-**Oppgave 4**
+</details>
+
+### Oppgave 4
+
+Lag en liste med navnene `["olsen", "Berg", "aas", "Nilsen"]`. Skriv ut lista sortert vanlig med `sorted()`, og deretter sortert uavhengig av store/små bokstaver med `key=str.lower`. Forklar med egne ord hvorfor de to resultatene er forskjellige.
+
+<details>
+<summary>💡 Løsningsforslag</summary>
 
 ```python
 navn = ["olsen", "Berg", "aas", "Nilsen"]
@@ -331,7 +334,14 @@ print(sorted(navn, key=str.lower))   # ['aas', 'Berg', 'Nilsen', 'olsen']
 
 Uten `key` sammenligner Python bokstavene direkte, og store bokstaver har lavere Unicode-verdi enn små bokstaver — derfor havner `"Berg"` og `"Nilsen"` (store forbokstaver) først. Med `key=str.lower` gjøres alle ordene midlertidig om til små bokstaver *før* sammenligningen, slik at sorteringen blir alfabetisk slik vi vanligvis tenker på det, uavhengig av store/små bokstaver.
 
-**Oppgave 5**
+</details>
+
+### Oppgave 5
+
+Lag en liste med tupler `[("Ola", 88), ("Kari", 95), ("Nora", 72), ("Jonas", 95)]` som representerer navn og poengsum. Skriv ut lista sortert etter poengsum, høyest først. Hvem havner øverst av de to med poengsum 95, og hvorfor (tenk på stabil sortering)?
+
+<details>
+<summary>💡 Løsningsforslag</summary>
 
 ```python
 resultater = [("Ola", 88), ("Kari", 95), ("Nora", 72), ("Jonas", 95)]
@@ -346,7 +356,14 @@ for navn, poeng in sorted(resultater, key=lambda par: par[1], reverse=True):
 
 `Kari` havner over `Jonas`, siden de har lik poengsum (95) og sortering i Python er *stabil* — elementer som er like etter sorteringskriteriet beholder sin opprinnelige rekkefølge, og `Kari` lå før `Jonas` i den originale lista.
 
-**Oppgave 6**
+</details>
+
+### Oppgave 6
+
+(Litt videre­kommen) Ta utgangspunkt i lista fra oppgave 5. Bruk en lambda til å sortere listen etter *siste bokstav* i navnet i stedet for poengsum.
+
+<details>
+<summary>💡 Løsningsforslag</summary>
 
 ```python
 resultater = [("Ola", 88), ("Kari", 95), ("Nora", 72), ("Jonas", 95)]
@@ -355,7 +372,14 @@ for navn, poeng in sorted(resultater, key=lambda par: par[0][-1]):
     print(navn, poeng)
 ```
 
-**Oppgave 7**
+</details>
+
+### Oppgave 7
+
+(Litt videre­kommen) Lag en dictionary `befolkning` med minst fire norske byer som nøkler og innbyggertall som verdier. Skriv ut byene sortert etter innbyggertall, flest først, på formen `Oslo: 697899`.
+
+<details>
+<summary>💡 Løsningsforslag</summary>
 
 ```python
 befolkning = {"Oslo": 697899, "Bergen": 298969, "Trondheim": 209462, "Stavanger": 148289}
@@ -364,7 +388,14 @@ for by, innbyggere in sorted(befolkning.items(), key=lambda par: par[1], reverse
     print(f"{by}: {innbyggere}")
 ```
 
-**Oppgave 8**
+</details>
+
+### Oppgave 8
+
+(Avansert) Lag en liste av dictionaries `elever`, der hver dictionary har feltene `"navn"`, `"klasse"` og `"karakter"` (minst fem elever, gjerne med noen som går i samme klasse). Skriv ut elevene sortert etter klasse, og innad i hver klasse etter karakter (høyest først). Bruk en tupel som `key`, og husk minustrikset fra steg 6 for å få karakteren synkende samtidig som klassen er stigende.
+
+<details>
+<summary>💡 Løsningsforslag</summary>
 
 ```python
 elever = [
@@ -384,7 +415,26 @@ for elev in sorted(elever, key=lambda e: (e["klasse"], -e["karakter"])):
 # 3IM2 Ola 4
 ```
 
-**Oppgave 9**
+</details>
+
+### Oppgave 9
+
+(Avansert) Under ser du resultater fra en hopp-konkurranse, der hver utøver har flere forsøk:
+
+```python
+hopp = [
+    {"navn": "Kari", "forsøk": [5.2, 5.8, 5.4]},
+    {"navn": "Ola", "forsøk": [5.9, 5.1, 6.0]},
+    {"navn": "Nora", "forsøk": [5.5, 5.6, 5.3]},
+]
+```
+
+a) Skriv ut utøverne sortert etter deres *beste* forsøk (bruk `max()` inne i lambdaen), best først.
+
+b) Lag en ny, sortert liste av dictionaries der hver dictionary i tillegg har fått et nytt felt `"beste"` med utøverens beste resultat (bruk en løkke, ikke comprehension, hvis du ikke har hatt det ennå).
+
+<details>
+<summary>💡 Løsningsforslag</summary>
 
 ```python
 hopp = [
@@ -408,3 +458,5 @@ for utøver in hopp_med_beste:
 for utøver in hopp_med_beste:
     print(utøver)
 ```
+
+</details>
