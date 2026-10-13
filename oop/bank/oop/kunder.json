@@ -1,0 +1,14 @@
+{
+    "1001": {
+        "navn": "Ola Nordmann",
+        "saldo": 1500
+    },
+    "1002": {
+        "navn": "Kari Nordmann",
+        "saldo": 3200
+    },
+    "1003": {
+        "navn": "Per Hansen",
+        "saldo": 250
+    }
+}

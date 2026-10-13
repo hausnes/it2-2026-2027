@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fra funksjoner til objekter</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+    <style>
+        .reveal { font-size: 34px; }
+        .reveal h1, .reveal h2 { text-transform: none; }
+        .reveal pre { width: 100%; font-size: 0.6em; }
+        .reveal pre code { max-height: 560px; }
+        .reveal table { font-size: 0.7em; }
+        .reveal .liten { font-size: 0.7em; color: #666; }
+        .reveal .to-kolonner { display: flex; gap: 1em; }
+        .reveal .to-kolonner > div { flex: 1; }
+        .reveal .boks { background: #f3f6fb; border-left: 6px solid #2a76dd; padding: 0.5em 0.8em; text-align: left; }
+        .reveal .flyt { font-family: monospace; font-size: 0.65em; line-height: 2; }
+        .reveal .flyt span { background: #eef; padding: 0.15em 0.4em; border-radius: 4px; }
+    </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+    <!-- ===== Intro ===== -->
+    <section>
+        <h1>Fra funksjoner til objekter</h1>
+        <p>Objektorientert programmering i Python</p>
+        <p class="liten">IT2 — Bank-oppgaven, del 2</p>
+    </section>
+
+    <section>
+        <h2>Der vi slapp</h2>
+        <p>Forrige time lagde vi en bank med <strong>dictionaries</strong> og <strong>funksjoner</strong>.</p>
+        <pre><code class="language-python" data-trim>
+kunder = {
+    "1001": {"navn": "Ola Nordmann", "saldo": 1500},
+    "1002": {"navn": "Kari Nordmann", "saldo": 3200},
+}
+
+def sett_inn(kunder, kontonummer, belop):
+    kunder[kontonummer]["saldo"] += belop
+
+sett_inn(kunder, "1001", 500)
+        </code></pre>
+        <p class="fragment">Den fungerer! Men ... 🤔</p>
+    </section>
+
+    <!-- ===== Diskusjon ===== -->
+    <section>
+        <h2>Diskuter to og to</h2>
+        <ol>
+            <li class="fragment">Hvor mange ganger skrev du <code>kunder[kontonummer]["saldo"]</code>?</li>
+            <li class="fragment">Hva skjer om du skriver <code>"sado"</code> i stedet for <code>"saldo"</code>? <em>Når</em> oppdager du feilen?</li>
+            <li class="fragment">Hvor mange funksjoner måtte få <code>kunder</code> som parameter?</li>
+            <li class="fragment">Hva hindrer noen i å skrive <code>kunder["1001"]["saldo"] = 1000000</code>?</li>
+            <li class="fragment">Vi vil legge til <strong>transaksjonshistorikk</strong>. Hvor må koden endres?</li>
+        </ol>
+        <aside class="notes">
+            Typiske svar:
+            1) Overalt — lang og lite lesbar kode.
+            2) KeyError først når akkurat den linjen kjøres. VS Code kan ikke hjelpe, det er bare tekst.
+            3) Nesten alle — og de trenger kontonummer i tillegg.
+            4) Ingenting. Reglene ligger i funksjonene, men ingen tvinger oss til å bruke dem.
+            5) opprett_kunde, JSON-fila, sett_inn, ta_ut, overfor ... endringene sprer seg.
+            Bonus: Hvor i koden står det hva en "kunde" ER? Ingen steder.
+        </aside>
+    </section>
+
+    <section>
+        <h2>Kjernen i problemet</h2>
+        <div class="to-kolonner">
+            <div class="boks">
+                <h3>Data</h3>
+                <p>navn, saldo</p>
+                <p class="liten">ligger i en dictionary</p>
+            </div>
+            <div class="boks">
+                <h3>Oppførsel</h3>
+                <p>sett inn, ta ut</p>
+                <p class="liten">ligger i løse funksjoner</p>
+            </div>
+        </div>
+        <p class="fragment">De hører sammen — men lever hver for seg.</p>
+        <p class="fragment"><strong>OOP samler dem.</strong></p>
+    </section>
+
+    <!-- ===== Begreper ===== -->
+    <section>
+        <h2>Klasse og objekt</h2>
+        <div class="to-kolonner">
+            <div>
+                <p style="font-size: 3em; margin: 0;">📐</p>
+                <p><strong>Klasse</strong><br>Tegningen av et hus</p>
+            </div>
+            <div class="fragment">
+                <p style="font-size: 3em; margin: 0;">🏠🏠🏠</p>
+                <p><strong>Objekter</strong><br>Husene som bygges fra tegningen</p>
+            </div>
+        </div>
+        <p class="fragment liten">Alle husene har samme oppbygning, men hvert hus har sine egne møbler.</p>
+    </section>
+
+    <section>
+        <h2>Nye begreper</h2>
+        <table>
+            <thead>
+                <tr><th>Begrep</th><th>Forklaring</th><th>I banken</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Klasse</strong></td><td>Mal som beskriver hva noe er og kan gjøre</td><td><code>Konto</code></td></tr>
+                <tr><td><strong>Objekt</strong></td><td>Én konkret ting laget fra klassen</td><td>Olas konto</td></tr>
+                <tr><td><strong>Attributt</strong></td><td>Variabel som hører til objektet</td><td><code>navn</code>, <code>saldo</code></td></tr>
+                <tr><td><strong>Metode</strong></td><td>Funksjon som hører til objektet</td><td><code>sett_inn()</code></td></tr>
+                <tr><td><strong><code>__init__</code></strong></td><td>Kjøres når et nytt objekt lages</td><td>Gir startverdier</td></tr>
+                <tr><td><strong><code>self</code></strong></td><td>"Meg selv" — objektet vi jobber med</td><td><code>self.saldo</code></td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ===== Steg 1 ===== -->
+    <section>
+        <h2>Steg 1: Vår første klasse</h2>
+        <pre><code class="language-python" data-trim data-line-numbers="1|2|3-5|8-9|11">
+class Konto:
+    def __init__(self, kontonummer, navn, saldo):
+        self.kontonummer = kontonummer
+        self.navn = navn
+        self.saldo = saldo
+
+
+konto1 = Konto("1001", "Ola Nordmann", 1500)
+konto2 = Konto("1002", "Kari Nordmann", 3200)
+
+print(konto1.saldo)   # 1500
+        </code></pre>
+        <p class="liten">📄 steg1_klasse.py</p>
+        <aside class="notes">
+            Gå gjennom linje for linje med piltastene. Poeng: __init__ kjøres automatisk når vi skriver Konto(...).
+            self er objektet som blir laget. Vi lager TO objekter fra SAMME klasse.
+        </aside>
+    </section>
+
+    <section>
+        <h2>Hva har vi vunnet?</h2>
+        <div class="to-kolonner">
+            <div>
+                <p class="liten">Før</p>
+                <pre><code class="language-python" data-trim>
+kunder["1001"]["saldo"]
+                </code></pre>
+            </div>
+            <div>
+                <p class="liten">Nå</p>
+                <pre><code class="language-python" data-trim>
+konto1.saldo
+                </code></pre>
+            </div>
+        </div>
+        <ul>
+            <li class="fragment">Kortere og lettere å lese</li>
+            <li class="fragment">VS Code foreslår attributtene når du skriver <code>konto1.</code></li>
+            <li class="fragment">Skrivefeil (<code>konto1.sado</code>) oppdages <em>med en gang</em></li>
+            <li class="fragment"><code>__init__</code> viser tydelig hva en konto <em>er</em></li>
+        </ul>
+    </section>
+
+    <!-- ===== Steg 2 ===== -->
+    <section>
+        <h2>Steg 2: Metoder</h2>
+        <p>Vi flytter funksjonene <strong>inn i</strong> klassen.</p>
+        <pre><code class="language-python" data-trim data-line-numbers="7-12|9|14-15">
+class Konto:
+    def __init__(self, kontonummer, navn, saldo=0):
+        self.kontonummer = kontonummer
+        self.navn = navn
+        self.saldo = saldo
+
+    def sett_inn(self, belop):
+        if belop &lt;= 0:
+            print("Beløpet må være større enn 0.")
+            return
+        self.saldo += belop
+        print(f"Satte inn {belop} kr.")
+
+ola = Konto("1001", "Ola Nordmann", 1500)
+ola.sett_inn(500)
+        </code></pre>
+        <p class="liten">📄 steg2_metoder.py</p>
+    </section>
+
+    <section>
+        <h2>Funksjon → metode</h2>
+        <table>
+            <thead>
+                <tr><th></th><th>Del 1: funksjon</th><th>Del 2: metode</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Definisjon</td><td><code>def sett_inn(kunder, kontonummer, belop):</code></td><td><code>def sett_inn(self, belop):</code></td></tr>
+                <tr><td>Endring</td><td><code>kunder[kontonummer]["saldo"] += belop</code></td><td><code>self.saldo += belop</code></td></tr>
+                <tr><td>Kall</td><td><code>sett_inn(kunder, "1001", 500)</code></td><td><code>ola.sett_inn(500)</code></td></tr>
+            </tbody>
+        </table>
+        <p class="fragment">Vi slipper å sende med <code>kunder</code> og <code>kontonummer</code> — kontoen <em>vet</em> hvem den er.</p>
+    </section>
+
+    <section>
+        <h2>Hva er egentlig <code>self</code>?</h2>
+        <pre><code class="language-python" data-trim>
+ola.sett_inn(500)
+        </code></pre>
+        <p class="fragment">... betyr egentlig:</p>
+        <pre class="fragment"><code class="language-python" data-trim>
+Konto.sett_inn(ola, 500)
+        </code></pre>
+        <p class="fragment">Python sender automatisk objektet foran punktumet inn som <code>self</code>.</p>
+        <p class="fragment liten">Når <code>kari.sett_inn(500)</code> kjøres, er <code>self</code> Karis konto.</p>
+    </section>
+
+    <section>
+        <h2>Metoder kan bruke hverandre</h2>
+        <pre><code class="language-python" data-trim data-line-numbers="1|8-9">
+    def overfor_til(self, annen_konto, belop):
+        if belop &lt;= 0:
+            print("Beløpet må være større enn 0.")
+            return
+        if belop &gt; self.saldo:
+            print("Det er ikke nok penger på kontoen.")
+            return
+        self.ta_ut(belop)
+        annen_konto.sett_inn(belop)
+        </code></pre>
+        <pre><code class="language-python" data-trim>
+ola.overfor_til(kari, 1000)
+        </code></pre>
+        <p class="fragment liten">Et objekt kan ta imot et annet objekt som parameter.</p>
+    </section>
+
+    <!-- ===== Steg 3 ===== -->
+    <section>
+        <h2>Steg 3: Mange kontoer</h2>
+        <p><code>Konto</code> = <strong>én</strong> konto. Men hvem holder styr på <strong>alle</strong>?</p>
+        <pre class="fragment"><code class="language-python" data-trim data-line-numbers="1-5|7-10">
+class Bank:
+    def __init__(self, filsti):
+        self.filsti = filsti
+        self.kontoer = {}  # kontonummer -> Konto-objekt
+        self.les_fra_fil()
+
+    def finn_konto(self, kontonummer):
+        if kontonummer not in self.kontoer:
+            return None
+        return self.kontoer[kontonummer]
+        </code></pre>
+        <p class="liten">📄 steg3_bank.py</p>
+    </section>
+
+    <section>
+        <h2>Objekter og JSON</h2>
+        <p>JSON kan lagre tekst, tall, lister og dictionaries — <strong>ikke våre egne objekter</strong>.</p>
+        <div class="flyt">
+            <p><span>kunder.json</span> → <code>json.load</code> → <span>dictionary</span> → <code>Konto(...)</code> → <span>Konto-objekter</span></p>
+            <p class="fragment"><span>kunder.json</span> ← <code>json.dump</code> ← <span>dictionary</span> ← <code>til_dict()</code> ← <span>Konto-objekter</span></p>
+        </div>
+        <pre class="fragment"><code class="language-python" data-trim>
+    def til_dict(self):
+        return {"navn": self.navn, "saldo": self.saldo}
+        </code></pre>
+    </section>
+
+    <section>
+        <h2>Menyen ble enklere</h2>
+        <div class="to-kolonner">
+            <div>
+                <p class="liten">Før</p>
+                <pre><code class="language-python" data-trim>
+kontonummer = les_kontonummer(kunder)
+if kontonummer:
+    sett_inn(kunder, kontonummer, belop)
+    lagre_data(kunder)
+                </code></pre>
+            </div>
+            <div>
+                <p class="liten">Nå</p>
+                <pre><code class="language-python" data-trim>
+konto = bank.finn_konto(kontonummer)
+if konto:
+    konto.sett_inn(belop)
+    bank.lagre_til_fil()
+                </code></pre>
+            </div>
+        </div>
+        <p class="fragment">Koden leses nesten som vanlig norsk: <em>"finn kontoen, sett inn beløpet"</em>.</p>
+    </section>
+
+    <!-- ===== Utfordring ===== -->
+    <section>
+        <h2>Utfordring: Transaksjonshistorikk</h2>
+        <ol>
+            <li>Gi <code>Konto</code> en ny attributt <code>historikk</code> (en liste)</li>
+            <li><code>sett_inn()</code> og <code>ta_ut()</code> legger til en linje i historikken</li>
+            <li>Lag metoden <code>vis_historikk()</code></li>
+            <li>Få med historikken i <code>til_dict()</code> og ved lesing fra fil</li>
+            <li>Legg til et menyvalg</li>
+        </ol>
+        <p class="fragment boks">Hvor mange steder måtte du endre nå — sammenlignet med del 1?</p>
+        <aside class="notes">
+            Poeng etterpå: Nesten alle endringene skjer i Konto-klassen.
+            overfor_til() måtte ikke endres i det hele tatt, fordi den bruker ta_ut() og sett_inn().
+            Løsningsforslag ligger i README.md.
+        </aside>
+    </section>
+
+    <!-- ===== Oppsummering ===== -->
+    <section>
+        <h2>Oppsummering</h2>
+        <table>
+            <thead>
+                <tr><th></th><th>Funksjoner + dictionaries</th><th>OOP</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Hente saldo</td><td><code>kunder["1001"]["saldo"]</code></td><td><code>konto.saldo</code></td></tr>
+                <tr><td>Sette inn</td><td><code>sett_inn(kunder, "1001", 500)</code></td><td><code>konto.sett_inn(500)</code></td></tr>
+                <tr><td>Hva er en kunde?</td><td>Må gjette</td><td>Står i <code>__init__</code></td></tr>
+                <tr><td>Skrivefeil</td><td>Krasj når linjen kjøres</td><td>VS Code sier fra</td></tr>
+                <tr><td>Ny funksjonalitet</td><td>Endringer mange steder</td><td>Samlet i klassen</td></tr>
+                <tr><td>Lagre til JSON</td><td>Rett fram</td><td>Litt mer jobb</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Det viktigste</h2>
+        <p class="boks">OOP er ikke alltid enklere å <strong>skrive</strong> —<br>
+        men det blir enklere å <strong>forstå, endre og utvide</strong> koden<br>
+        etter hvert som programmet vokser.</p>
+    </section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+    Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+        plugins: [RevealHighlight, RevealNotes],
+    });
+</script>
+</body>
+</html>
