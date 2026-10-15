@@ -4,6 +4,10 @@
 
 > Hvordan kan man finne ut hvordan et program virker, uten å ha kildekoden? Hva skjer når AI plutselig gjør dette mye enklere? Hvilke muligheter har vi?
 
+Eksempel på video som oppsummerer litt av essensen i originalartiklene lenger nede (klikk på bildet for å se videoen):
+
+[![Video på YouTube: oppsummering av temaet](https://img.youtube.com/vi/wajoP_5Cpw8/hqdefault.jpg)](https://www.youtube.com/watch?v=wajoP_5Cpw8)
+
 ---
 
 ## Om oppgaven
@@ -70,7 +74,7 @@ Besvarelsen din skal **minst** inneholde:
 
 ---
 
-## Obligatoriske oppgaver
+## 🔴 Obligatoriske oppgaver
 
 ### Oppgave 1 – Begreper
 
@@ -85,8 +89,9 @@ Forklar begrepene under **med egne ord**. Bruk gjerne et eksempel fra kildene ti
 5. Reverse engineering
 6. Modding
 7. Emulering
+8. Open source (og lisens)
 
-**Ekstra (velg gjerne noen):** disassemblering, portering, open source / lisens, *clean room*-reverse-engineering, firmware, klone.
+**Ekstra (velg gjerne noen):** disassemblering, portering, *clean room*-reverse-engineering, firmware, klone.
 
 > 💡 **Tips:** Lag en tabell med kolonnene *Begrep*, *Forklaring* og *Eksempel*.
 
@@ -108,13 +113,16 @@ Den motsatte veien: å gå fra maskinkode tilbake til kildekode som kan leses. R
 Å oversette maskinkode for én plattform direkte til et program som kjører på en annen plattform, uten å gå veien om lesbar kildekode. I «recomp»-prosjektene (f.eks. N64-spill som kjører rett på PC) oversettes hele spillet på forhånd («statisk»), i stedet for mens det kjører. Dette går ofte raskere å få til enn en full dekompilering, men koden blir ikke like lett å lese og endre.
 
 **Reverse engineering**
-Samlebegrepet for å finne ut hvordan noe virker ved å undersøke det ferdige produktet, når man ikke har tegningene eller kildekoden. Dekompilering, disassemblering og å studere hva et program gjør mens det kjører (f.eks. nettverkstrafikk) er alle former for reverse engineering. Det gjelder ikke bare programvare – også maskinvare og fysiske produkter.
+Samlebegrepet for å finne ut hvordan noe virker ved å undersøke det ferdige produktet, når man ikke har tegningene eller kildekoden. Dekompilering, disassemblering og å studere hva et program gjør mens det kjører (f.eks. nettverkstrafikk) er alle former for reverse engineering. Det gjelder ikke bare programvare, også maskinvare og fysiske produkter.
 
 **Modding**
 Å endre et eksisterende spill eller program, f.eks. ny grafikk, nye baner, høyere oppløsning eller nye funksjoner. Modding er mye enklere når man har kildekode fra en dekompilering eller et recomp-prosjekt, men har også blitt gjort lenge ved å endre filer direkte.
 
 **Emulering**
-Å late som man er en annen maskin: en *emulator* er et program som etterligner maskinvaren til f.eks. en Nintendo 64, slik at det originale spillet kan kjøre uendret på en PC. Forskjellen fra decomp/recomp er at spillet selv ikke endres – det er «maskinen» som simuleres. Det krever mer regnekraft og gir mindre frihet til å endre spillet.
+Å late som man er en annen maskin: en *emulator* er et program som etterligner maskinvaren til f.eks. en Nintendo 64, slik at det originale spillet kan kjøre uendret på en PC. Forskjellen fra decomp/recomp er at spillet selv ikke endres, det er «maskinen» som simuleres. Det krever mer regnekraft og gir mindre frihet til å endre spillet.
+
+**Open source (og lisens)**
+*Open source* (åpen kildekode) betyr at kildekoden er offentlig tilgjengelig, slik at hvem som helst kan lese den, lære av den, endre den og dele den videre. *Lisensen* bestemmer hva man har lov til: med MIT-lisensen kan du gjøre nesten hva du vil, mens GPL-lisensen krever at endrede versjoner også må deles som open source. Open source-programmer lages ofte av frivillige og er som regel gratis, men det betyr ikke at de er uten regler. *Eksempel:* GIMP, Inkscape og LibreOffice har vært gratis alternativer til Adobe og Microsoft Office i mange år. Det er derfor ikke det at alternativene er gratis som er nytt med de AI-lagde klonene, men hvor raskt de lages, og at de etterligner originalen så tett.
 
 ---
 
@@ -124,7 +132,6 @@ Samlebegrepet for å finne ut hvordan noe virker ved å undersøke det ferdige p
 |---|---|
 | Disassemblering | Å oversette maskinkode til *assembly* – en tekstversjon av maskininstruksjonene. Lesbart for eksperter, men mye mer lavnivå enn dekompilert kode. Ofte første steg i reverse engineering. |
 | Portering | Å tilpasse et program slik at det kjører på en annen plattform, f.eks. fra konsoll til PC. |
-| Open source | Kildekoden er offentlig tilgjengelig, og lisensen (f.eks. MIT eller GPL) bestemmer hva andre har lov til å gjøre med den. |
 | Clean room-reverse-engineering | En metode for å unngå brudd på opphavsretten: én gruppe undersøker originalen og skriver en beskrivelse av hvordan den virker, og en *annen* gruppe som aldri har sett originalkoden lager et nytt program ut fra beskrivelsen. |
 | Klone | Et program som etterligner et annet programs funksjoner og utseende, men er laget med egen kode. En klone trenger ikke være laget med reverse engineering. |
 | Firmware | Programvare som ligger innebygd i maskinvare, f.eks. i en ruter, et hovedkort, en skriver eller en spillkonsoll. |
@@ -149,6 +156,7 @@ Lag to lister (eller én tabell) med argumenter **for** og **mot** det som skjer
 - Arbeidsplasser og selskaper som lever av abonnement
 - Sikkerhet, både for og mot (kan verktøyene brukes til å finne sårbarheter, eller til å lage skadevare?)
 - Kvalitet og brukerstøtte,  hvem hjelper deg når en gratis klone ikke virker?
+- Open source: Hva er nytt nå, når gratis alternativer som GIMP og LibreOffice har fantes i mange år?
 - ...
 
 **Under listene:** Skriv din personlige mening i ett eller flere avsnitt. Er dette mest positivt eller negativt? Begrunn svaret.
@@ -157,17 +165,31 @@ Lag to lister (eller én tabell) med argumenter **for** og **mot** det som skjer
 
 Prøv minst ett av de AI-lagde Adobe-alternativene som omtales i artikkelen.
 
+> 💡 **Visste du?** Det har lenge fantes gratis open source-alternativer til Adobe-programmene, laget av frivillige over mange år, uten AI og uten reverse engineering:
+>
+> | Adobe | Open source-alternativ |
+> |---|---|
+> | Photoshop | [GIMP](https://www.gimp.org/), [Krita](https://krita.org/) |
+> | Illustrator | [Inkscape](https://inkscape.org/) |
+> | InDesign | [Scribus](https://www.scribus.net/) |
+> | Lightroom | [darktable](https://www.darktable.org/) |
+> | Premiere Pro | [Kdenlive](https://kdenlive.org/), [Shotcut](https://shotcut.org/) |
+> | After Effects | [Natron](https://natrongithub.github.io/) |
+> | Audition | [Audacity](https://www.audacityteam.org/) |
+> | Microsoft Office | [LibreOffice](https://www.libreoffice.org/) |
+
 1. Hvilket program prøvde du, og hvilket Adobe-program skal det erstatte?
 2. Hvor lastet du det ned fra, og hvordan installerte/startet du det?
 3. Lag en **tabell** som sammenligner klonen med originalen (pris, funksjoner, brukervennlighet, ytelse, lisens).
 4. Legg ved **minst to skjermbilder** av opplevelsen.
 5. Gi en samlet vurdering: Ville du anbefalt dette til en vanlig bruker? Til en bedrift?
+6. Sammenlign klonen med et av de etablerte open source-alternativene i tabellen over. Hva er forskjellen på en *klone* som etterligner Adobe, og et alternativ som har utviklet seg på egen hånd? Hvorfor tror du mange fortsatt betaler for Adobe, selv om gratis alternativer har fantes lenge?
 
-> ⚠️ **Husk:** Last kun ned fra den offisielle kilden (som lenkes i artiklene / GitHub). Følg skolens regler for installasjon av programvare – spør læreren hvis du er usikker.
+> ⚠️ **Husk:** Last kun ned fra den offisielle kilden (som lenkes i artiklene / GitHub).
 
 ---
 
-## Valgfrie oppgaver (velg minst to)
+## 🔵 Valgfrie oppgaver (velg minst to)
 
 ### Oppgave 5 – Super Mario 64: Da og nå
 
