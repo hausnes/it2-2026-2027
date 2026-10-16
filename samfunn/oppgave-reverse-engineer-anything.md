@@ -173,7 +173,7 @@ Prøv minst ett av de AI-lagde Adobe-alternativene som omtales i artikkelen.
 > | Illustrator | [Inkscape](https://inkscape.org/) |
 > | InDesign | [Scribus](https://www.scribus.net/) |
 > | Lightroom | [darktable](https://www.darktable.org/) |
-> | Premiere Pro | [Kdenlive](https://kdenlive.org/), [Shotcut](https://shotcut.org/) |
+> | Premiere Pro | [DaVinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve), [Kdenlive](https://kdenlive.org/), [Shotcut](https://shotcut.org/) |
 > | After Effects | [Natron](https://natrongithub.github.io/) |
 > | Audition | [Audacity](https://www.audacityteam.org/) |
 > | Microsoft Office | [LibreOffice](https://www.libreoffice.org/) |
