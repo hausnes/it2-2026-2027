@@ -165,7 +165,7 @@ Lag to lister (eller én tabell) med argumenter **for** og **mot** det som skjer
 
 Prøv minst ett av de AI-lagde Adobe-alternativene som omtales i artikkelen.
 
-> 💡 **Visste du?** Det har lenge fantes gratis open source-alternativer til Adobe-programmene, laget av frivillige over mange år, uten AI og uten reverse engineering:
+> 💡 **Visste du?** Det har lenge eksistert gratis open source-alternativer til Adobe-programmene, laget av frivillige over mange år, uten AI og uten reverse engineering:
 >
 > | Adobe | Open source-alternativ |
 > |---|---|
@@ -183,7 +183,7 @@ Prøv minst ett av de AI-lagde Adobe-alternativene som omtales i artikkelen.
 3. Lag en **tabell** som sammenligner klonen med originalen (pris, funksjoner, brukervennlighet, ytelse, lisens).
 4. Legg ved **minst to skjermbilder** av opplevelsen.
 5. Gi en samlet vurdering: Ville du anbefalt dette til en vanlig bruker? Til en bedrift?
-6. Sammenlign klonen med et av de etablerte open source-alternativene i tabellen over. Hva er forskjellen på en *klone* som etterligner Adobe, og et alternativ som har utviklet seg på egen hånd? Hvorfor tror du mange fortsatt betaler for Adobe, selv om gratis alternativer har fantes lenge?
+6. Sammenlign klonen med et av de etablerte open source-alternativene i tabellen over. Hva er forskjellen på en *klone* som etterligner Adobe, og et alternativ som har utviklet seg på egen hånd? Hvorfor tror du mange fortsatt betaler for Adobe, selv om gratis alternativer har eksistert lenge?
 
 > ⚠️ **Husk:** Last kun ned fra den offisielle kilden (som lenkes i artiklene / GitHub).
 
