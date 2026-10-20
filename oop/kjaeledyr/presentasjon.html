@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kjæledyr og objekter</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+    <style>
+        .reveal { font-size: 34px; }
+        .reveal h1, .reveal h2 { text-transform: none; }
+        .reveal pre { width: 100%; font-size: 0.6em; }
+        .reveal pre code { max-height: 560px; }
+        .reveal table { font-size: 0.7em; }
+        .reveal .liten { font-size: 0.7em; color: #666; }
+        .reveal .to-kolonner { display: flex; gap: 1em; }
+        .reveal .to-kolonner > div { flex: 1; }
+        .reveal .boks { background: #f3f6fb; border-left: 6px solid #2a76dd; padding: 0.5em 0.8em; text-align: left; }
+        .reveal .stor { font-size: 3em; margin: 0; }
+    </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+    <!-- ===================== SLUTTEN AV TIME 1 ===================== -->
+    <section>
+        <p class="stor">🐶🐱🐰</p>
+        <h1>Kjæledyr</h1>
+        <p>Fra variabler til objekter</p>
+    </section>
+
+    <section>
+        <h2>Hva skjedde i dag?</h2>
+        <div class="to-kolonner">
+            <div class="fragment"><p class="stor">🐶</p><p><strong>Del A</strong><br>Ett dyr</p><p class="liten">Greit nok!</p></div>
+            <div class="fragment"><p class="stor">🐶🐱</p><p><strong>Del B</strong><br>To dyr</p><p class="liten">Hmm ...</p></div>
+            <div class="fragment"><p class="stor">🐶🐱🐰🐹</p><p><strong>Del C</strong><br>Mange dyr</p><p class="liten">Uff.</p></div>
+        </div>
+        <p class="fragment">Hva var mest irriterende? Skrik ut (diskuter).</p>
+    </section>
+
+    <section>
+        <h2>Tungvint 1: <code>global</code> overalt</h2>
+        <pre><code class="language-python" data-trim data-line-numbers="2">
+def leke():
+    global sult, energi, glede
+    glede = begrens(glede + 3)
+    energi = begrens(energi - 2)
+    sult = begrens(sult + 1)
+        </code></pre>
+        <p class="fragment">Glemmer du én variabel i <code>global</code>-linja → <code>UnboundLocalError</code>.</p>
+        <p class="fragment liten">Og hvem som helst, hvor som helst, kan endre <code>sult</code>.</p>
+    </section>
+
+    <section>
+        <h2>Tungvint 2: Kopiert kode</h2>
+        <pre><code class="language-python" data-trim>
+def mate(hvilket):
+    global sult1, glede1, sult2, glede2
+    if hvilket == "1":
+        sult1 = begrens(sult1 - 3)
+        glede1 = begrens(glede1 + 1)
+    else:
+        sult2 = begrens(sult2 - 3)
+        glede2 = begrens(glede2 + 1)
+        </code></pre>
+        <p class="fragment">Samme logikk to ganger. Og for 10 dyr? 😱</p>
+        <p class="fragment liten">Finner du en feil i regelen, må du rette den på alle stedene.</p>
+    </section>
+
+    <section>
+        <h2>Tungvint 3: Lange parameterlister</h2>
+        <pre><code class="language-python" data-trim>
+vis_status(navn1, sult1, energi1, glede1)
+vis_status(navn2, sult2, energi2, glede2)
+        </code></pre>
+        <p class="fragment">Får dyret en ny verdi (f.eks. <code>alder</code>), må <em>alle</em> kallene endres.</p>
+        <p class="fragment liten">Og bytter du rekkefølgen på to argumenter ved en feil, merker du ingenting.</p>
+    </section>
+
+    <section>
+        <h2>Tungvint 4: Tekst-nøkler</h2>
+        <p>Liste med dictionaries var mye bedre! Men ...</p>
+        <pre><code class="language-python" data-trim>
+dyr["slut"] = begrens(dyr["sult"] - 3)
+        </code></pre>
+        <p class="fragment">Skrivefeil oppdages først når <em>akkurat den linja</em> kjøres.</p>
+        <p class="fragment liten">For VS Code er <code>"slut"</code> bare tekst — den kan ikke hjelpe deg.</p>
+    </section>
+
+    <section>
+        <h2>Tungvint 5: Hva <em>er</em> et kjæledyr?</h2>
+        <pre><code class="language-python" data-trim>
+dyrene = [
+    {"navn": "Fido", "sult": 5, "energi": 5, "glede": 5},
+    {"navn": "Pusur", "sult": 5, "energi": 5, "glade": 5},
+]
+        </code></pre>
+        <p class="fragment">Så du feilen? Ingenting i koden sier hvilke nøkler et dyr <em>skal</em> ha.</p>
+    </section>
+
+    <section>
+        <h2>Kjernen i problemet</h2>
+        <div class="to-kolonner">
+            <div class="boks">
+                <h3>Data</h3>
+                <p>navn, sult, energi, glede</p>
+                <p class="liten">variabler eller dictionaries</p>
+            </div>
+            <div class="boks">
+                <h3>Oppførsel</h3>
+                <p>mate, leke, sove</p>
+                <p class="liten">løse funksjoner</p>
+            </div>
+        </div>
+        <p class="fragment">De hører sammen — men lever hver for seg.</p>
+        <p class="fragment"><strong>Neste time: Objektorientert programmering samler dem.</strong></p>
+    </section>
+
+    <!-- ===================== TIME 2 ===================== -->
+    <section>
+        <p class="stor">🐶 + 🧠</p>
+        <h1>Time 2</h1>
+        <p>Et dyr som vet hva det <em>er</em> og hva det <em>kan</em></p>
+    </section>
+
+    <section>
+        <h2>Klasse og objekt</h2>
+        <div class="to-kolonner">
+            <div>
+                <p class="stor">📋</p>
+                <p><strong>Klasse</strong><br>Malen: «et kjæledyr har navn, sult, energi og glede, og kan mate, leke og sove»</p>
+            </div>
+            <div class="fragment">
+                <p class="stor">🐶🐱🐰</p>
+                <p><strong>Objekter</strong><br>Fido, Pusur og Rex — laget fra samme mal</p>
+            </div>
+        </div>
+        <p class="fragment liten">Alle har samme oppbygning, men hver har sin egen sult og glede.</p>
+    </section>
+
+    <section>
+        <h2>Begreper</h2>
+        <table>
+            <thead><tr><th>Begrep</th><th>Forklaring</th><th>I spillet</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Klasse</strong></td><td>Mal for hva noe er og kan gjøre</td><td><code>Kjaeledyr</code></td></tr>
+                <tr><td><strong>Objekt</strong></td><td>Én konkret ting laget fra klassen</td><td><code>fido</code></td></tr>
+                <tr><td><strong>Attributt</strong></td><td>Variabel som hører til objektet</td><td><code>self.sult</code></td></tr>
+                <tr><td><strong>Metode</strong></td><td>Funksjon som hører til objektet</td><td><code>mate()</code></td></tr>
+                <tr><td><strong><code>__init__</code></strong></td><td>Kjøres når et objekt lages</td><td>Startverdier</td></tr>
+                <tr><td><strong><code>self</code></strong></td><td>«Meg selv» — objektet vi jobber med</td><td>Fido eller Pusur</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Steg 1–2: Klassen og objektene</h2>
+        <pre><code class="language-python" data-trim data-line-numbers="1|2|3-6|9-10|12">
+class Kjaeledyr:
+    def __init__(self, navn):
+        self.navn = navn
+        self.sult = 5
+        self.energi = 5
+        self.glede = 5
+
+
+fido = Kjaeledyr("Fido")
+pusur = Kjaeledyr("Pusur")
+
+print(fido.sult)   # i stedet for dyr["sult"] eller sult1
+        </code></pre>
+        <aside class="notes">
+            __init__ kjøres automatisk når vi skriver Kjaeledyr("Fido"). self er dyret som blir laget.
+            Vis i VS Code: skriv fido. og se forslagene. Skriv fido.slut og se at den blir markert.
+        </aside>
+    </section>
+
+    <section>
+        <h2>Steg 3–4: Metoder</h2>
+        <pre><code class="language-python" data-trim data-line-numbers="1|2-3|7">
+    def mate(self):
+        self.sult = begrens(self.sult - 3)
+        self.glede = begrens(self.glede + 1)
+        print(f"Du ga {self.navn} mat.")
+
+
+fido.mate()
+        </code></pre>
+        <p class="fragment">Ingen <code>global</code>. Ingen <code>if hvilket == "1"</code>. Ingen lange parameterlister.</p>
+    </section>
+
+    <section>
+        <h2>Hva er egentlig <code>self</code>?</h2>
+        <pre><code class="language-python" data-trim>
+fido.mate()
+        </code></pre>
+        <p class="fragment">... betyr egentlig:</p>
+        <pre class="fragment"><code class="language-python" data-trim>
+Kjaeledyr.mate(fido)
+        </code></pre>
+        <p class="fragment">Python sender automatisk objektet foran punktumet inn som <code>self</code>.</p>
+        <p class="fragment liten">Når <code>pusur.mate()</code> kjøres, er <code>self</code> Pusur.</p>
+    </section>
+
+    <section>
+        <h2>Steg 5: En liste med objekter</h2>
+        <pre><code class="language-python" data-trim>
+dyrene = [Kjaeledyr("Fido"), Kjaeledyr("Pusur"), Kjaeledyr("Rex")]
+
+for dyr in dyrene:
+    dyr.tiden_gaar()
+        </code></pre>
+        <p class="fragment">Fungerer for 3 dyr — eller 300.</p>
+        <p class="fragment liten">Adoptere nytt dyr: <code>dyrene.append(Kjaeledyr("Bamse"))</code></p>
+    </section>
+
+    <section>
+        <h2>Før og etter</h2>
+        <table>
+            <thead><tr><th>Problem i time 1</th><th>Med OOP</th></tr></thead>
+            <tbody>
+                <tr><td><code>global</code> overalt</td><td>Metodene endrer <code>self.sult</code></td></tr>
+                <tr><td>Kopiert kode per dyr</td><td>Én klasse, mange objekter</td></tr>
+                <tr><td><code>vis_status(navn1, sult1, ...)</code></td><td><code>fido.vis_status()</code></td></tr>
+                <tr><td><code>dyr["slut"]</code> → krasj</td><td><code>fido.slut</code> → VS Code sier fra</td></tr>
+                <tr><td>Hva er et dyr?</td><td>Står i <code>__init__</code></td></tr>
+                <tr><td>Data og funksjoner hver for seg</td><td>Samlet i klassen</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Din tur! 🛠️</h2>
+        <p>Åpne <code>oop/kjaeledyr/README.md</code> og følg guiden.</p>
+        <ol class="liten" style="text-align: left;">
+            <li>Klassen og <code>__init__</code></li>
+            <li>Lag objekter</li>
+            <li>Første metode: <code>vis_status()</code></li>
+            <li>Metoder som endrer dyret</li>
+            <li>En liste med objekter</li>
+            <li>Hele spillet</li>
+            <li>Test hvor lett det er å endre</li>
+        </ol>
+        <p class="liten">Ferdig? Prøv bonusen: hund og katt med <strong>arv</strong>.</p>
+    </section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+    Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+        plugins: [RevealHighlight, RevealNotes],
+    });
+</script>
+</body>
+</html>
