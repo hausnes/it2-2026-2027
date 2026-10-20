@@ -1,14 +1,21 @@
 {
     "1001": {
+        "type": "brukskonto",
         "navn": "Ola Nordmann",
-        "saldo": 1500
+        "saldo": 1500,
+        "historikk": []
     },
     "1002": {
+        "type": "sparekonto",
         "navn": "Kari Nordmann",
-        "saldo": 3200
+        "saldo": 3200,
+        "historikk": [],
+        "uttak": 0
     },
     "1003": {
+        "type": "brukskonto",
         "navn": "Per Hansen",
-        "saldo": 250
+        "saldo": 250,
+        "historikk": []
     }
 }

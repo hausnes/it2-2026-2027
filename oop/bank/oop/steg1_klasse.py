@@ -22,11 +22,15 @@ konto2 = Konto("1002", "Kari Nordmann", 3200)
 print(konto1.navn, "har", konto1.saldo, "kr")
 print(konto2.navn, "har", konto2.saldo, "kr")
 
-# Endre en attributt
-konto1.saldo += 500
-print(konto1.navn, "har nå", konto1.saldo, "kr")
+# Hvert objekt har sine egne attributter
+konto2.navn = "Kari Nordmann-Hansen"
+print(konto1.navn)  # Uendret
+print(konto2.navn)
 
 # Sammenlign med del 1:
 #   kunder["1001"]["saldo"]   ->   konto1.saldo
 # Skriver du konto1.sado (skrivefeil), sier VS Code fra med en gang.
 # Skriver du kunder["1001"]["sado"], merker du det først når programmet krasjer.
+#
+# Saldoen endrer vi IKKE direkte. Det skal skje via metoder (steg 2),
+# slik at reglene (ikke negative beløp, ikke overtrekk) alltid følges.

@@ -2,6 +2,8 @@
 Del 1: Banksystem med "vanlig" Python
 Data: dictionary i dictionary, lagret i kunder.json
 Logikk: funksjoner som får kunde-dictionaryen som parameter
+
+Løsningsforslag med minstekrav + utvidelser (oversikt, overføring, try/except og JSON).
 """
 
 import json
@@ -40,27 +42,23 @@ def sett_inn(kunder, kontonummer, belop):
 
 
 def ta_ut(kunder, kontonummer, belop):
+    # Returnerer True/False, slik at overfor() vet om uttaket gikk bra
     if belop <= 0:
         print("Beløpet må være større enn 0.")
-        return
+        return False
     if belop > kunder[kontonummer]["saldo"]:
         print("Det er ikke nok penger på kontoen.")
-        return
+        return False
     kunder[kontonummer]["saldo"] -= belop
     print(f"Tok ut {belop} kr.")
     vis_saldo(kunder, kontonummer)
+    return True
 
 
 def overfor(kunder, fra_konto, til_konto, belop):
-    if belop <= 0:
-        print("Beløpet må være større enn 0.")
-        return
-    if belop > kunder[fra_konto]["saldo"]:
-        print("Det er ikke nok penger på kontoen.")
-        return
-    kunder[fra_konto]["saldo"] -= belop
-    kunder[til_konto]["saldo"] += belop
-    print(f"Overførte {belop} kr fra {fra_konto} til {til_konto}.")
+    # Gjenbruker ta_ut() og sett_inn(), slik at reglene bare står ett sted
+    if ta_ut(kunder, fra_konto, belop):
+        sett_inn(kunder, til_konto, belop)
 
 
 def opprett_kunde(kunder, navn):

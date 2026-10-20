@@ -49,27 +49,47 @@ def sett_inn(kunder, kontonummer, belop):
 
 sett_inn(kunder, "1001", 500)
         </code></pre>
-        <p class="fragment">Den fungerer! Men ... 🤔</p>
+        <p class="fragment">... og så kom banken med nye ønsker: <strong>historikk</strong> og <strong>sparekonto</strong>. 🤔</p>
+    </section>
+
+    <section>
+        <h2>Etter endringsrunden</h2>
+        <pre><code class="language-python" data-trim>
+def ta_ut(kunder, kontonummer, belop):
+    kunde = kunder[kontonummer]
+    ...
+    if kunde["type"] == "sparekonto" and kunde["uttak"] >= 3:
+        print("Du har brukt opp uttakene på sparekontoen.")
+        return False
+    kunde["saldo"] -= belop
+    kunde["historikk"].append(f"Uttak: {belop} kr")
+    if kunde["type"] == "sparekonto":
+        kunde["uttak"] += 1
+        </code></pre>
+        <p class="fragment">Og tilsvarende i <code>vis_saldo</code>, <code>opprett_kunde</code>, <code>legg_til_renter</code> ...</p>
     </section>
 
     <!-- ===== Diskusjon ===== -->
     <section>
         <h2>Diskuter to og to</h2>
-        <ol>
+        <ol style="font-size: 0.8em;">
             <li class="fragment">Hvor mange ganger skrev du <code>kunder[kontonummer]["saldo"]</code>?</li>
             <li class="fragment">Hva skjer om du skriver <code>"sado"</code> i stedet for <code>"saldo"</code>? <em>Når</em> oppdager du feilen?</li>
             <li class="fragment">Hvor mange funksjoner måtte få <code>kunder</code> som parameter?</li>
+            <li class="fragment">Hvilke funksjoner måtte endres for historikken? Og for sparekontoen?</li>
+            <li class="fragment">Hvor mange steder sjekker du kontotypen? Hva om det kommer en tredje type?</li>
+            <li class="fragment">Hvor står det at en sparekonto har <code>"uttak"</code>, men ikke en brukskonto?</li>
             <li class="fragment">Hva hindrer noen i å skrive <code>kunder["1001"]["saldo"] = 1000000</code>?</li>
-            <li class="fragment">Vi vil legge til <strong>transaksjonshistorikk</strong>. Hvor må koden endres?</li>
         </ol>
         <aside class="notes">
             Typiske svar:
             1) Overalt — lang og lite lesbar kode.
             2) KeyError først når akkurat den linjen kjøres. VS Code kan ikke hjelpe, det er bare tekst.
             3) Nesten alle — og de trenger kontonummer i tillegg.
-            4) Ingenting. Reglene ligger i funksjonene, men ingen tvinger oss til å bruke dem.
-            5) opprett_kunde, JSON-fila, sett_inn, ta_ut, overfor ... endringene sprer seg.
-            Bonus: Hvor i koden står det hva en "kunde" ER? Ingen steder.
+            4) Historikk: opprett_kunde, sett_inn, ta_ut, ny funksjon, meny, startdata/JSON. Gamle kunder gir KeyError.
+            5) vis_saldo, ta_ut (to ganger), opprett_kunde, legg_til_renter. Ny type = lete opp alle.
+            6) Ingen steder — "det kommer an på typen". Må lese opprett_kunde eller JSON-fila.
+            7) Ingenting. Ærlig: Python-klasser hindrer det ikke helt heller, men vi kan signalisere det (steg 2).
         </aside>
     </section>
 
@@ -116,7 +136,7 @@ sett_inn(kunder, "1001", 500)
             <tbody>
                 <tr><td><strong>Klasse</strong></td><td>Mal som beskriver hva noe er og kan gjøre</td><td><code>Konto</code></td></tr>
                 <tr><td><strong>Objekt</strong></td><td>Én konkret ting laget fra klassen</td><td>Olas konto</td></tr>
-                <tr><td><strong>Attributt</strong></td><td>Variabel som hører til objektet</td><td><code>navn</code>, <code>saldo</code></td></tr>
+                <tr><td><strong>Attributt</strong></td><td>Variabel som hører til objektet</td><td><code>navn</code>, <code>_saldo</code></td></tr>
                 <tr><td><strong>Metode</strong></td><td>Funksjon som hører til objektet</td><td><code>sett_inn()</code></td></tr>
                 <tr><td><strong><code>__init__</code></strong></td><td>Kjøres når et nytt objekt lages</td><td>Gir startverdier</td></tr>
                 <tr><td><strong><code>self</code></strong></td><td>"Meg selv" — objektet vi jobber med</td><td><code>self.saldo</code></td></tr>
@@ -175,18 +195,18 @@ konto1.saldo
     <section>
         <h2>Steg 2: Metoder</h2>
         <p>Vi flytter funksjonene <strong>inn i</strong> klassen.</p>
-        <pre><code class="language-python" data-trim data-line-numbers="7-12|9|14-15">
+        <pre><code class="language-python" data-trim data-line-numbers="7-12|11|14-15">
 class Konto:
     def __init__(self, kontonummer, navn, saldo=0):
         self.kontonummer = kontonummer
         self.navn = navn
-        self.saldo = saldo
+        self._saldo = saldo
 
     def sett_inn(self, belop):
         if belop &lt;= 0:
             print("Beløpet må være større enn 0.")
             return
-        self.saldo += belop
+        self._saldo += belop
         print(f"Satte inn {belop} kr.")
 
 ola = Konto("1001", "Ola Nordmann", 1500)
@@ -203,11 +223,32 @@ ola.sett_inn(500)
             </thead>
             <tbody>
                 <tr><td>Definisjon</td><td><code>def sett_inn(kunder, kontonummer, belop):</code></td><td><code>def sett_inn(self, belop):</code></td></tr>
-                <tr><td>Endring</td><td><code>kunder[kontonummer]["saldo"] += belop</code></td><td><code>self.saldo += belop</code></td></tr>
+                <tr><td>Endring</td><td><code>kunder[kontonummer]["saldo"] += belop</code></td><td><code>self._saldo += belop</code></td></tr>
                 <tr><td>Kall</td><td><code>sett_inn(kunder, "1001", 500)</code></td><td><code>ola.sett_inn(500)</code></td></tr>
             </tbody>
         </table>
         <p class="fragment">Vi slipper å sende med <code>kunder</code> og <code>kontonummer</code> — kontoen <em>vet</em> hvem den er.</p>
+    </section>
+
+    <section>
+        <h2>Hvorfor <code>_saldo</code>?</h2>
+        <p>Understrek betyr: <em>«internt — ikke rør utenfor klassen»</em></p>
+        <div class="to-kolonner">
+            <div>
+                <p class="liten">✅ Gjennom metodene (reglene følges)</p>
+                <pre><code class="language-python" data-trim>
+ola.sett_inn(500)
+ola.ta_ut(200)
+                </code></pre>
+            </div>
+            <div>
+                <p class="liten">🚫 Juks — alle ser det</p>
+                <pre><code class="language-python" data-trim>
+ola._saldo = 1000000
+                </code></pre>
+            </div>
+        </div>
+        <p class="fragment liten">Python stopper deg ikke — men med en dictionary finnes det ingen måte å si fra om dette.</p>
     </section>
 
     <section>
@@ -225,53 +266,35 @@ Konto.sett_inn(ola, 500)
 
     <section>
         <h2>Metoder kan bruke hverandre</h2>
-        <pre><code class="language-python" data-trim data-line-numbers="1|8-9">
+        <pre><code class="language-python" data-trim data-line-numbers="1|2-3">
     def overfor_til(self, annen_konto, belop):
-        if belop &lt;= 0:
-            print("Beløpet må være større enn 0.")
-            return
-        if belop &gt; self.saldo:
-            print("Det er ikke nok penger på kontoen.")
-            return
-        self.ta_ut(belop)
-        annen_konto.sett_inn(belop)
+        if self.ta_ut(belop):
+            annen_konto.sett_inn(belop)
         </code></pre>
         <pre><code class="language-python" data-trim>
 ola.overfor_til(kari, 1000)
         </code></pre>
-        <p class="fragment liten">Et objekt kan ta imot et annet objekt som parameter.</p>
+        <p class="fragment liten"><code>ta_ut()</code> returnerer <code>True</code>/<code>False</code>. Et objekt kan ta imot et annet objekt som parameter.</p>
     </section>
 
     <!-- ===== Steg 3 ===== -->
     <section>
         <h2>Steg 3: Mange kontoer</h2>
         <p><code>Konto</code> = <strong>én</strong> konto. Men hvem holder styr på <strong>alle</strong>?</p>
-        <pre class="fragment"><code class="language-python" data-trim data-line-numbers="1-5|7-10">
+        <pre class="fragment"><code class="language-python" data-trim data-line-numbers="1-3|5-6|8-11">
 class Bank:
-    def __init__(self, filsti):
-        self.filsti = filsti
+    def __init__(self):
         self.kontoer = {}  # kontonummer -> Konto-objekt
-        self.les_fra_fil()
+
+    def legg_til(self, konto):
+        self.kontoer[konto.kontonummer] = konto
 
     def finn_konto(self, kontonummer):
         if kontonummer not in self.kontoer:
             return None
         return self.kontoer[kontonummer]
         </code></pre>
-        <p class="liten">📄 steg3_bank.py</p>
-    </section>
-
-    <section>
-        <h2>Objekter og JSON</h2>
-        <p>JSON kan lagre tekst, tall, lister og dictionaries — <strong>ikke våre egne objekter</strong>.</p>
-        <div class="flyt">
-            <p><span>kunder.json</span> → <code>json.load</code> → <span>dictionary</span> → <code>Konto(...)</code> → <span>Konto-objekter</span></p>
-            <p class="fragment"><span>kunder.json</span> ← <code>json.dump</code> ← <span>dictionary</span> ← <code>til_dict()</code> ← <span>Konto-objekter</span></p>
-        </div>
-        <pre class="fragment"><code class="language-python" data-trim>
-    def til_dict(self):
-        return {"navn": self.navn, "saldo": self.saldo}
-        </code></pre>
+        <p class="liten">📄 steg3_bank.py — foreløpig uten fil</p>
     </section>
 
     <section>
@@ -283,7 +306,6 @@ class Bank:
 kontonummer = les_kontonummer(kunder)
 if kontonummer:
     sett_inn(kunder, kontonummer, belop)
-    lagre_data(kunder)
                 </code></pre>
             </div>
             <div>
@@ -292,7 +314,6 @@ if kontonummer:
 konto = bank.finn_konto(kontonummer)
 if konto:
     konto.sett_inn(belop)
-    bank.lagre_til_fil()
                 </code></pre>
             </div>
         </div>
@@ -306,14 +327,90 @@ if konto:
             <li>Gi <code>Konto</code> en ny attributt <code>historikk</code> (en liste)</li>
             <li><code>sett_inn()</code> og <code>ta_ut()</code> legger til en linje i historikken</li>
             <li>Lag metoden <code>vis_historikk()</code></li>
-            <li>Få med historikken i <code>til_dict()</code> og ved lesing fra fil</li>
             <li>Legg til et menyvalg</li>
         </ol>
-        <p class="fragment boks">Hvor mange steder måtte du endre nå — sammenlignet med del 1?</p>
+        <p class="fragment boks">Sammenlign med del 1: Ikke nødvendigvis <em>færre</em> endringer — men <em>hvor</em> er de?</p>
         <aside class="notes">
-            Poeng etterpå: Nesten alle endringene skjer i Konto-klassen.
-            overfor_til() måtte ikke endres i det hele tatt, fordi den bruker ta_ut() og sett_inn().
+            Vær ærlig: antallet er omtrent det samme. Poenget er at alt utenom menyen skjer i Konto-klassen.
+            I del 1 måtte man også huske opprett_kunde, startdataene og JSON-fila — alle steder en kunde LAGES.
+            Her lages alle kontoer av __init__, så nye kontoer får historikk automatisk.
             Løsningsforslag ligger i README.md.
+        </aside>
+    </section>
+
+    <!-- ===== Steg 4: Arv ===== -->
+    <section>
+        <h2>Steg 4: Sparekonto med arv</h2>
+        <p>En sparekonto <em>er</em> en konto — med noen ekstra regler.</p>
+        <pre><code class="language-python" data-trim data-line-numbers="1|4-6|8-15">
+class Sparekonto(Konto):  # arver alt fra Konto
+    MAKS_UTTAK = 3
+
+    def __init__(self, kontonummer, navn, saldo=0):
+        super().__init__(kontonummer, navn, saldo)
+        self.uttak = 0
+
+    def ta_ut(self, belop):
+        if self.uttak &gt;= self.MAKS_UTTAK:
+            print("Du har brukt opp uttakene.")
+            return False
+        if super().ta_ut(belop):
+            self.uttak += 1
+            return True
+        return False
+        </code></pre>
+        <p class="liten">📄 steg4_sparekonto.py</p>
+        <aside class="notes">
+            Arv: Sparekonto får alt fra Konto. Overstyring: egen ta_ut() brukes i stedet.
+            super(): kaller metoden i Konto, så vi slipper å skrive reglene på nytt.
+            Alt som er spesielt for sparekontoen står HER — ikke spredt rundt i koden.
+        </aside>
+    </section>
+
+    <section>
+        <h2>Ingen typesjekker!</h2>
+        <div class="to-kolonner">
+            <div>
+                <p class="liten">Del 1</p>
+                <pre><code class="language-python" data-trim>
+for kunde in kunder.values():
+    if kunde["type"] == "sparekonto":
+        renter = round(kunde["saldo"] * 0.02)
+        kunde["saldo"] += renter
+        ...
+                </code></pre>
+            </div>
+            <div>
+                <p class="liten">OOP</p>
+                <pre><code class="language-python" data-trim>
+for konto in self.kontoer.values():
+    konto.legg_til_renter()
+                </code></pre>
+            </div>
+        </div>
+        <p class="fragment">Hver konto vet selv hva den skal gjøre.</p>
+        <p class="fragment boks">Prøv selv: Lag en <strong>BSU</strong>-konto (5 % rente, ingen uttak). Hvor mye må endres?</p>
+    </section>
+
+    <!-- ===== Steg 5: JSON ===== -->
+    <section>
+        <h2>Steg 5: Objekter og JSON</h2>
+        <p>JSON kan lagre tekst, tall, lister og dictionaries — <strong>ikke våre egne objekter</strong>.</p>
+        <div class="flyt">
+            <p><span>kunder.json</span> → <code>json.load</code> → <span>dictionary</span> → <code>Konto(...)</code> → <span>Konto-objekter</span></p>
+            <p class="fragment"><span>kunder.json</span> ← <code>json.dump</code> ← <span>dictionary</span> ← <code>til_dict()</code> ← <span>Konto-objekter</span></p>
+        </div>
+        <pre class="fragment"><code class="language-python" data-trim>
+    def til_dict(self):   # i Sparekonto
+        data = super().til_dict()
+        data["type"] = "sparekonto"
+        data["uttak"] = self.uttak
+        return data
+        </code></pre>
+        <p class="liten">📄 steg5_json.py</p>
+        <aside class="notes">
+            Ærlig: dette er en reell kostnad med OOP. I del 1 var lagring nesten gratis.
+            Typesjekken trengs nå bare ett sted: i Bank.les_fra_fil(), når vi skal velge hvilken klasse vi lager.
         </aside>
     </section>
 
@@ -325,12 +422,14 @@ if konto:
                 <tr><th></th><th>Funksjoner + dictionaries</th><th>OOP</th></tr>
             </thead>
             <tbody>
-                <tr><td>Hente saldo</td><td><code>kunder["1001"]["saldo"]</code></td><td><code>konto.saldo</code></td></tr>
+                <tr><td>Hente data</td><td><code>kunder["1001"]["navn"]</code></td><td><code>konto.navn</code></td></tr>
                 <tr><td>Sette inn</td><td><code>sett_inn(kunder, "1001", 500)</code></td><td><code>konto.sett_inn(500)</code></td></tr>
                 <tr><td>Hva er en kunde?</td><td>Må gjette</td><td>Står i <code>__init__</code></td></tr>
                 <tr><td>Skrivefeil</td><td>Krasj når linjen kjøres</td><td>VS Code sier fra</td></tr>
-                <tr><td>Ny funksjonalitet</td><td>Endringer mange steder</td><td>Samlet i klassen</td></tr>
-                <tr><td>Lagre til JSON</td><td>Rett fram</td><td>Litt mer jobb</td></tr>
+                <tr><td>Ny funksjonalitet</td><td>Endringer spredt</td><td>Samlet i klassen</td></tr>
+                <tr><td>Ny kontotype</td><td><code>if type == ...</code> mange steder</td><td>Ny klasse som arver</td></tr>
+                <tr><td>Beskytte saldoen</td><td>Ingen måte</td><td><code>_saldo</code> + metoder</td></tr>
+                <tr><td>Lagre til JSON</td><td>Rett fram</td><td>Mer jobb</td></tr>
             </tbody>
         </table>
     </section>
