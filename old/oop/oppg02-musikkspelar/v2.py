@@ -1,6 +1,6 @@
 import pygame
 
-class Song:
+class Track:
     """A class to represent a song."""
 
     def __init__(self, title, filename):
@@ -14,7 +14,7 @@ class Song:
         return self.filename
 
 class Player:
-    """A class to control the playback of songs."""
+    """A class to control the playback of tracks."""
 
     def __init__(self, paused=False):
         pygame.mixer.init()
@@ -56,15 +56,17 @@ class Player:
         print("\nFunksjonar:")
         print("1: Vel lydfil")
         print("2: Spele lydfil")
-        print("3: Pause lydfil")
+        print("3: Pause/unpause lydfil")
         print("4: Stopp lydfil")
         print("5: Avslutt")
         print()
 
-song1 = Song("Horror hit", "lyd/horror-hit-logo-142395.mp3")
-song2 = Song("Sunflower Street Drumloop", "lyd/sunflower-street-drumloop-85bpm-163900.mp3")
-song3 = Song("Science Documentary", "lyd/science-documentary-169621.mp3")
-song4 = Song("Trap Future Bass", "lyd/trap-future-bass-royalty-free-music-167020.mp3")
+# Opprettar liste med songar ("tracks")
+tracks = []
+tracks.append(Track("Horror hit", "lyd/horror-hit-logo-142395.mp3"))
+tracks.append(Track("Sunflower Street Drumloop", "lyd/sunflower-street-drumloop-85bpm-163900.mp3"))
+tracks.append(Track("Science Documentary", "lyd/science-documentary-169621.mp3"))
+tracks.append(Track("Trap Future Bass", "lyd/trap-future-bass-royalty-free-music-167020.mp3"))
 
 # Oppretter musikkspelarobjektet
 player = Player()
@@ -84,11 +86,11 @@ while val != 5:
         case 1:
             # Lar brukaren velge lydfil
             print("Vel lydfil:")
-            for i, song in enumerate([song1, song2, song3, song4]):
-                print(f"{i}: {song.get_title()}")
-            valSong = int(input("Vel lydfil: "))
-            song = [song1, song2, song3, song4][valSong]
-            player.load_song(song)
+            for i, track in enumerate(tracks):
+                print(f"{i}: {track.get_title()}")
+            valgTrack = int(input("Vel lydfil: "))
+            song = tracks[valgTrack]
+            player.load_song(track)
         case 2:
             player.play()
         case 3:
