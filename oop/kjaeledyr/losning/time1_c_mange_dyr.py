@@ -60,7 +60,10 @@ def velg_dyr(dyrene):
         return None
 
 
-dyrene = [nytt_dyr("Fido"), nytt_dyr("Pusur")]
+dyrene = [
+    nytt_dyr("Fido"), 
+    nytt_dyr("Pusur")
+]
 
 while True:
     print()
