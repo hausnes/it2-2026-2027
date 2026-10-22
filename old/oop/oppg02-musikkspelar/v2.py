@@ -1,7 +1,7 @@
 import pygame
 
 class Track:
-    """A class to represent a song."""
+    """A class to represent a track (a song or sound file)."""
 
     def __init__(self, title, filename):
         self.title = title
@@ -16,22 +16,27 @@ class Track:
 class Player:
     """A class to control the playback of tracks."""
 
-    def __init__(self, paused=False):
+    def __init__(self):
         pygame.mixer.init()
-        self.current_song = None
+        self.current_track = None
         self.paused = False
 
-    def load_song(self, song):
-        """Loads a song into the player."""
-        self.current_song = song
-        pygame.mixer.music.load(song.get_filename())
+    def load_track(self, track):
+        """Loads a track into the player."""
+        self.current_track = track
+        self.paused = False
+        pygame.mixer.music.load(track.get_filename())
 
     def play(self):
-        """Plays the current song."""
+        """Plays the current track from the start."""
+        if self.current_track is None:
+            print("Du må velje ei lydfil først.")
+            return
+        self.paused = False
         pygame.mixer.music.play()
 
     def pause(self):
-        """Pauses or unpauses the current song."""
+        """Pauses or unpauses the current track."""
         if self.paused:
             self.paused = False
             pygame.mixer.music.unpause()
@@ -40,26 +45,27 @@ class Player:
             pygame.mixer.music.pause()
 
     def stop(self):
-        """Stops the current song."""
+        """Stops the current track."""
+        self.paused = False
         pygame.mixer.music.stop()
 
     def is_playing(self):
-        """Returns True if the current song is playing, False otherwise."""
+        """Returns True if the current track is playing, False otherwise."""
         return pygame.mixer.music.get_busy()
 
-    def get_current_song(self):
-        """Returns the current song that is being played, or None if no song is playing."""
-        return self.current_song
-    
-    def show_menu(self):
-        '''Shows the menu.'''
-        print("\nFunksjonar:")
-        print("1: Vel lydfil")
-        print("2: Spele lydfil")
-        print("3: Pause/unpause lydfil")
-        print("4: Stopp lydfil")
-        print("5: Avslutt")
-        print()
+    def get_current_track(self):
+        """Returns the current track, or None if no track is loaded."""
+        return self.current_track
+
+def show_menu():
+    '''Shows the menu.'''
+    print("\nFunksjonar:")
+    print("1: Vel lydfil")
+    print("2: Spele lydfil")
+    print("3: Pause/unpause lydfil")
+    print("4: Stopp lydfil")
+    print("5: Avslutt")
+    print()
 
 # Opprettar liste med songar ("tracks")
 tracks = []
@@ -68,10 +74,10 @@ tracks.append(Track("Sunflower Street Drumloop", "lyd/sunflower-street-drumloop-
 tracks.append(Track("Science Documentary", "lyd/science-documentary-169621.mp3"))
 tracks.append(Track("Trap Future Bass", "lyd/trap-future-bass-royalty-free-music-167020.mp3"))
 
-# Oppretter musikkspelarobjektet
+# Opprettar musikkspelarobjektet
 player = Player()
 
-# Ønsker brukeren velkomen
+# Ønsker brukaren velkomen
 print("-----------------------------")
 print("Velkomen til musikkspelaren!")
 print("-----------------------------")
@@ -79,8 +85,11 @@ print("-----------------------------")
 val = 0
 
 while val != 5:
-    player.show_menu()
-    print("Gjeldande lydfil:", player.get_current_song().get_title() if player.get_current_song() else "Ingen lydfil valt.")
+    show_menu()
+    if player.get_current_track() is None:
+        print("Gjeldande lydfil: Ingen lydfil valt.")
+    else:
+        print("Gjeldande lydfil:", player.get_current_track().get_title())
     val = int(input("\nKva vil du gjere? "))
     match val:
         case 1:
@@ -88,9 +97,9 @@ while val != 5:
             print("Vel lydfil:")
             for i, track in enumerate(tracks):
                 print(f"{i}: {track.get_title()}")
-            valgTrack = int(input("Vel lydfil: "))
-            song = tracks[valgTrack]
-            player.load_song(track)
+            valgt_nr = int(input("Vel lydfil: "))
+            valgt_track = tracks[valgt_nr]
+            player.load_track(valgt_track)
         case 2:
             player.play()
         case 3:
@@ -100,7 +109,5 @@ while val != 5:
         case 5:
             print("\nAvsluttar...")
             player.stop()
-            break
         case _:
             print("\nUgyldig val.")
-            pass

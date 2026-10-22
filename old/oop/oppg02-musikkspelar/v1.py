@@ -48,10 +48,10 @@ class Player:
 song1 = Song("Horror hit", "lyd/horror-hit-logo-142395.mp3")
 song2 = Song("Sunflower Street Drumloop", "lyd/sunflower-street-drumloop-85bpm-163900.mp3")
 
-# Oppretter musikkspelarobjektet
+# Opprettar musikkspelarobjektet
 player = Player()
 
-# Ønsker brukeren velkomen
+# Ønsker brukaren velkomen
 print("-----------------------------")
 print("No skal du få høyre to låtar!")
 print("-----------------------------")
@@ -63,7 +63,7 @@ player.play()
 while player.is_playing():
     pass
 
-# Play the next song
+# Spelar neste song
 player.load_song(song2)
 player.play()
 
