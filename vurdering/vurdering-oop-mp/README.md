@@ -41,7 +41,11 @@ Programmet ditt skal ha:
 I tillegg skal du lage:
 
 8. **Et klassediagram** som viser klassene dine med attributter og metoder, og hvilke klasser som arver fra hverandre. Du kan tegne det på papir, i et tegneprogram eller i en `README.md`. Se [eksempelet under](#eksempel-på-klassediagram).
-9. **En kort README.md** i prosjektmappa di som forklarer hva programmet gjør og hvordan det kjøres. Skriv også hvilke kilder du har brukt (nettsider, eksempelkode og lignende), og hvordan du har brukt KI (se [Bruk av KI](#bruk-av-ki)).
+9. **En README.md** i prosjektmappa di som 
+   - forklarer hva programmet gjør og hvordan det kjøres 
+   - hvilke kilder du har brukt (nettsider, eksempelkode og lignende)
+   - hvordan du har brukt KI (se [Bruk av KI](#bruk-av-ki))
+   - en kort oppsummering av hva du har gjort, når (logg)
 
 ### Bruk av KI
 
