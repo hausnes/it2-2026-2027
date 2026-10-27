@@ -1,3 +1,5 @@
+# https://pypi.org/project/rich-pixels/
+
 from rich_pixels import Pixels
 from rich.console import Console
 

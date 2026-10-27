@@ -83,7 +83,7 @@ logo2 =r"""
                                                                                                                                                                                                                                                      
 """
 
-enemy_list =  {"skelleton":
+enemy_list =  {"skeleton":
 """
                               _.--""-._
   .                         ."         ".
