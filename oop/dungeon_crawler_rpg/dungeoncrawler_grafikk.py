@@ -1,6 +1,13 @@
-# Kjelde https://github.com/davidtc8/My_First_RPG_Game/blob/master/art1.py
-
-import codecs
+# Kilde: https://github.com/davidtc8/My_First_RPG_Game/blob/master/art1.py
+#
+# Denne fila inneholder bare tekstgrafikk (ASCII-art) lagret i variabler.
+# Du kan bruke grafikken i ditt eget spill slik:
+#
+#     from dungeoncrawler_grafikk import logo, enemy_list
+#     print(enemy_list["dragon"])
+#
+# r foran """ betyr "raw string": da tolkes ikke \ som spesialtegn,
+# noe som er viktig når grafikken inneholder mange skråstreker.
 
 logo = r"""                                                                                                                      
                                                                                     ░░░▒░░░░░░                                                        
@@ -83,8 +90,8 @@ logo2 =r"""
                                                                                                                                                                                                                                                      
 """
 
-enemy_list =  {"skeleton":
-"""
+enemy_list = {"skeleton":
+r"""
                               _.--""-._
   .                         ."         ".
  / \    ,^.         /(     Y             |      )\
@@ -125,7 +132,7 @@ enemy_list =  {"skeleton":
                                              |||||
 """,
     "dragon":
-"""
+r"""
                                              ,--,  ,.-.
                ,                   \,       '-,-`,'-.' | ._
               /|           \    ,   |\         }  )/  / `-,',
@@ -151,7 +158,7 @@ enemy_list =  {"skeleton":
  \( `   <.,../`     `-.._   _,-`
 """,
 "woods":
-"""
+r"""
 ▒▒▒▒▒▒▒▒▓▒▒▒▒▒▓▒▒▒▒▒▒▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒█▒░░▓▒█ ░█▓░ ▒█▒░▓▓█▓▒▒▒▒▒▓░▒▒▓▓▓█░░▓▓▓▒▓▓▒▓▓▒▓▓▓░░▓█▓▒██▒
 ▒░ ▒▒▓▓▓▓   ░▓▓ ░░░▒▓▓▒▒▒▓█▓▓████▓▓▓▓▒▒▒▒▓█░░▒▓▓▓ ░▓░ ░▒█░░▓▓█▒░░░░░ ░░░▓███░░░░▒▒▓▓▒▒▒▒▓▓▓▓▒▓▓▓▓▓▓▓
 ▓░ ▒▒▒▓▓▓░░▒▒▓▓░▓░▒░▓▓▒▓▒▓▓▓▓▓▓█▓▓███▒▓▒▓▓▓░▒▒▓█▒ ░▒▒▒▒▒▓░▒▓▓█▒░▒░░░▒▒░▒▒▓▓█▒▒▓▒▓▒░ ▒▓▓▓▒░▒▓█▓░▒█▓▓▓
@@ -197,6 +204,11 @@ enemy_list =  {"skeleton":
 """
 }
 
-print(logo2)
-
-print(logo)
+# Koden under kjøres bare når du kjører denne fila direkte,
+# ikke når du importerer grafikken fra en annen fil.
+if __name__ == "__main__":
+    print(logo2)
+    print(logo)
+    for navn, bilde in enemy_list.items():
+        print(navn)
+        print(bilde)

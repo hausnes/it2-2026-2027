@@ -1,6 +1,6 @@
 # from typewriter_effect import *
 # eller
-import typewriter_effect as jbh # Gjer det tydelegare at det er ditt eige..?
+import typewriter_effect as jbh # Kall den kva du vil!
 
 setning = "Jo Bjørnar Hausnes elskar OOP."
 

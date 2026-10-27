@@ -27,12 +27,12 @@ Når man skal lage noe nytt, er det lurt å starte med å finne et lite eksempel
 ```python
 from pygame import mixer
 
-mixer.init()                                     # 1. Start lydsystemet
+mixer.init()                                        # 1. Start lydsystemet
 mixer.music.load("lyd/horror-hit-logo-142395.mp3")  # 2. Last inn en fil
-mixer.music.set_volume(0.7)                      # 3. Sett volumet
-mixer.music.play()                               # 4. Spill av
+mixer.music.set_volume(0.7)                         # 3. Sett volumet
+mixer.music.play()                                  # 4. Spill av
 
-while mixer.music.get_busy():                    # Vent til låten er ferdig
+while mixer.music.get_busy():                       # Vent til låten er ferdig
     pass
 ```
 
