@@ -47,6 +47,8 @@ class Enemy(Character):
 
 # Denne koden kjøres bare når du starter karakterer.py direkte,
 # ikke når fila importeres fra en annen fil.
+# Spesifisering: "Kjør dette bare hvis denne fila er den som ble startet."
+# ..da __name__ er "__main__" for den filen du starter direkte (trenger ikke hete main.py).
 if __name__ == "__main__":
     test_spiller = Player("Test", 1, 100, 10)
     test_fiende = Enemy("Testfiende", 2, 50, "pinne")
