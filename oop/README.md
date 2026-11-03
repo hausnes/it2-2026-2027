@@ -385,3 +385,4 @@ class Dyrepark:
 | [dungeon_crawler_rpg/](dungeon_crawler_rpg/) | OOP-prosjekt: lite rollespill i terminalen |
 | [importering/](importering/) | Modularitet: klasser i egen fil og `import` |
 | [typewriter_effect/](typewriter_effect/) | Liten modul med skrivemaskin-effekt som kan importeres i egne prosjekter |
+| [map (kart)/](map/) | Kart-logikk med klasser for rom, spiller og fiende - samt kamp |
