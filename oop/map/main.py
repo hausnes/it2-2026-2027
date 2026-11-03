@@ -14,7 +14,18 @@ class Map:
         self.width = len(grid[0])  # antall kolonner
 
     def is_inside(self, row, col):
-        return 0 <= row < self.height and 0 <= col < self.width
+        if row < 0:  # over kartet
+            return False
+        if row >= self.height:  # under kartet
+            return False
+        if col < 0:  # til venstre for kartet
+            return False
+        if col >= self.width:  # til høyre for kartet
+            return False
+        return True
+
+        # Kortere alternativ som gjør nøyaktig det samme:
+        # return 0 <= row < self.height and 0 <= col < self.width
 
     def is_blocked(self, row, col):
         return self.grid[row][col] == 1
