@@ -7,7 +7,8 @@ Et lite eksempel på hvordan en spillkarakter kan gå rundt på et kart. Kartet 
 | [main.py](main.py) | Klassene `Map` og `Player`, og en løkke der du styrer med w/a/s/d |
 | [main-v2.py](main-v2.py) | Samme kart, men nå kan du gå i kamp mot fiendene (se [del 5](#5-versjon-2-kamp-mot-fiender)) |
 | [main-v3.py](main-v3.py) | Som v2, men med pikselgrafikk for kartet og kampene (se [del 6](#6-versjon-3-pikselgrafikk-med-rich-pixels)) |
-| [graphics.py](graphics.py) | Klassen `Graphics`, som tegner med rich-pixels. Brukes av `main-v3.py` |
+| [main-v4.py](main-v4.py) | Som v3, men skjermen tømmes før hver tegning, så det ser ut som et spill (se [del 7](#7-versjon-4-tømme-skjermen-mellom-hver-tegning)) |
+| [graphics.py](graphics.py) | Klassen `Graphics`, som tegner med rich-pixels. Brukes av `main-v3.py` og `main-v4.py` |
 
 Kjør med:
 
@@ -15,9 +16,10 @@ Kjør med:
 python main.py
 python main-v2.py
 python main-v3.py
+python main-v4.py
 ```
 
-`main-v3.py` trenger biblioteket rich-pixels. Installer det først med `pip install rich-pixels`.
+`main-v3.py` og `main-v4.py` trenger biblioteket rich-pixels. Installer det først med `pip install rich-pixels`.
 
 ---
 
@@ -214,6 +216,7 @@ Fargene er skrevet som hex-koder (`#rrggbb`), som du kanskje kjenner fra CSS. Vi
 | --- | --- |
 | `draw_map(game_map, player)` | Tegner kartet, med spilleren som en grønn rute |
 | `draw_fight(player, enemy)` | Tegner spilleren og fienden ved siden av hverandre, levende eller døde |
+| `clear()` | Tømmer terminalen (brukes i v4) |
 | `draw_sprite(sprite)` | Tegner én figur, f.eks. `graphics.draw_sprite(SPILLER)` (kan brukes etter behov) |
 | `_draw(text, colors)` | Hjelpemetode som de andre bruker. Gjør om bokstaver til farger og skriver ut |
 
@@ -239,6 +242,61 @@ Ikke mye, og det er hele poenget:
 - `fight()` tar imot `graphics` og kaller `graphics.draw_fight(player, enemy)` i starten av hver runde, og én gang til etter kampen, når en av dem ligger død.
 
 > **Tips:** Svarte vegger kan bli vanskelige å se hvis terminalen har mørk bakgrunn. Bytt til en annen farge i `KARTFARGER` om du vil.
+
+---
+
+## 7. Versjon 4: tømme skjermen mellom hver tegning
+
+I v3 blir hver nye tegning skrevet ut under den forrige, så terminalen fylles opp nedover. I [main-v4.py](main-v4.py) tømmer vi skjermen før hver tegning med `graphics.clear()`. Da står kartet alltid øverst, og det ser mer ut som et spill og mindre som en logg.
+
+### Problemet: meldingene forsvinner
+
+Det holder ikke å bare legge inn `graphics.clear()` øverst i løkka. I v3 skriver `move()` ut en melding, for eksempel «Det står en hindring i veien.», rett **før** neste runde i løkka. Med en gang løkka starter på nytt, tømmes skjermen, og meldingen forsvinner før du rekker å lese den.
+
+### Løsningen: returner meldingen i stedet for å printe den
+
+I v4 bruker metodene `return` i stedet for `print()`:
+
+```python
+def attack(self, enemy):
+    damage = random.randint(4, 8)
+    enemy.hp -= damage
+    return f"{self.name} angriper og gjør {damage} skade."
+```
+
+Hovedløkka tar vare på meldingen i en variabel og skriver den ut **etter** at skjermen er tømt og kartet er tegnet:
+
+```python
+message = "Velkommen! Finn og beseir fiendene."
+
+while True:
+    graphics.clear()
+    graphics.draw_map(game_map, spiller)
+    print(message)
+    valg = input("Gå med w/a/s/d (q for å avslutte): ").lower()
+    ...
+    message = spiller.move(d_row, d_col, game_map)
+```
+
+Rekkefølgen i hver runde blir: **tøm → tegn → vis melding → spør**.
+
+Dette gjør også klassene ryddigere. `Player` bestemmer hva som skal skje, men ikke hvordan det skal vises. Det er det samme poenget som da `Graphics` fikk ansvaret for tegningen i v3.
+
+### Kampen
+
+I kampen skjer det to ting hver runde: spilleren gjør noe, og fienden angriper. Meldingene settes sammen med `"\n"`, slik at de havner på hver sin linje:
+
+```python
+message = player.attack(enemy)
+if enemy.is_alive():
+    message += "\n" + enemy.attack(player)
+```
+
+Tegningen av kampen (tøm, tegn figurene, vis HP og melding) ligger i en egen funksjon, `draw_fight_screen()`, fordi den brukes to steder: i hver runde og én gang til når kampen er over.
+
+Etter kampen venter spillet på at du trykker Enter. Ellers ville kartet blitt tegnet med en gang, og du hadde ikke sett hvem som vant.
+
+> **Merk:** `clear()` virker i vanlige terminaler, også den i VS Code. Kjører du programmet et sted som ikke er en ekte terminal, for eksempel i noen nettbaserte editorer, kan det hende skjermen ikke blir tømt.
 
 ---
 
@@ -269,6 +327,5 @@ Dette er bare **én** måte å gjøre det på. Noen ting du kan prøve, eller gj
 - La fienden også velge mellom flere handlinger, for eksempel tilfeldig med `random.choice`.
 - Lag din egen figur i `graphics.py`, f.eks. en skattekiste, og tegn den med `draw_sprite` når spilleren finner en skatt.
 - Gi spilleren en annen figur når den forsvarer seg (med skjold) eller healer.
-- Tøm skjermen før hver tegning med `graphics.console.clear()`, så det ser mer ut som et spill og mindre som en logg.
 - Les kartet fra en tekstfil i stedet for å skrive det i koden.
 - Flytt klassene til en egen fil, slik som i [importering](../importering/README.md).

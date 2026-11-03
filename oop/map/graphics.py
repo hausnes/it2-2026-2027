@@ -91,6 +91,10 @@ class Graphics:
         # med segmentet, så skriver console.print resultatet til terminalen
         self.console.print(Pixels.from_ascii(text, mapping))
 
+    def clear(self):
+        # Tømmer terminalen, slik at neste tegning havner øverst
+        self.console.clear()
+
     def draw_map(self, game_map, player):
         # Bygger opp kartet som én tekststreng, ett tegn per rute
         text = ""
