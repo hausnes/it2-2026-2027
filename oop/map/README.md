@@ -5,12 +5,19 @@ Et lite eksempel på hvordan en spillkarakter kan gå rundt på et kart. Kartet 
 | Fil | Hva den inneholder |
 | --- | --- |
 | [main.py](main.py) | Klassene `Map` og `Player`, og en løkke der du styrer med w/a/s/d |
+| [main-v2.py](main-v2.py) | Samme kart, men nå kan du gå i kamp mot fiendene (se [del 5](#5-versjon-2-kamp-mot-fiender)) |
+| [main-v3.py](main-v3.py) | Som v2, men med pikselgrafikk for kartet og kampene (se [del 6](#6-versjon-3-pikselgrafikk-med-rich-pixels)) |
+| [graphics.py](graphics.py) | Klassen `Graphics`, som tegner med rich-pixels. Brukes av `main-v3.py` |
 
 Kjør med:
 
 ```
 python main.py
+python main-v2.py
+python main-v3.py
 ```
+
+`main-v3.py` trenger biblioteket rich-pixels. Installer det først med `pip install rich-pixels`.
 
 ---
 
@@ -98,11 +105,148 @@ Da trenger `Player` bare én `move`-metode, uansett retning.
 
 ---
 
+## 5. Versjon 2: kamp mot fiender
+
+I [main-v2.py](main-v2.py) skjer det noe når du går på en fiende (`2`): du havner i en kamp. Vinner du, blir cellen til gulv og du kan utforske videre. Taper du, er spillet over.
+
+### Nye ting i klassene
+
+| Klasse | Nytt | Hva det gjør |
+| --- | --- | --- |
+| `Map` | `has_enemy(row, col)` | Står det en fiende her? |
+| `Map` | `remove_enemy(row, col)` | Gjør cellen om til gulv (`0`) når fienden er beseiret |
+| `Player` | `hp`, `max_hp` | Hvor mye liv spilleren har nå, og maks |
+| `Player` | `attack(enemy)` | Gjør 4–8 skade på fienden |
+| `Player` | `defend()` | Neste angrep fra fienden gjør bare halv skade |
+| `Player` | `heal()` | Får tilbake 6 HP, men aldri mer enn `max_hp` |
+| `Player` | `take_damage(damage)` | Trekker fra skade, og halverer den hvis spilleren forsvarer seg |
+| `Enemy` | ny klasse | Har `name` og `hp`, og kan angripe spilleren (3–7 skade) |
+
+Skaden er tilfeldig med `random.randint(a, b)`, som gir et heltall fra og med `a` til og med `b`. Derfor blir ikke to kamper like.
+
+### Hvem passer på forsvaret?
+
+Det er `Player` som vet om den forsvarer seg (`self.defending`). Fienden bryr seg ikke om det, den kaller bare `player.take_damage(damage)`, og så regner spilleren selv ut hvor mye skade den faktisk tar:
+
+```python
+def take_damage(self, damage):
+    if self.defending:
+        damage = damage // 2  # halv skade når vi forsvarer oss
+        self.defending = False
+    self.hp -= damage
+    return damage
+```
+
+`defending` settes tilbake til `False` med en gang, slik at forsvaret bare gjelder **ett** angrep. Metoden returnerer den faktiske skaden, så fienden kan skrive ut riktig tall.
+
+### Kampen er en egen løkke
+
+Funksjonen `fight(player, enemy)` har sin egen `while`-løkke, inne i hovedløkka. Hver runde har to deler:
+
+1. **Spillerens tur:** velg angrip (`a`), forsvar (`f`) eller heal (`h`).
+2. **Fiendens tur:** fienden angriper, men **bare hvis den fortsatt lever**. Ellers kunne en død fiende slått tilbake.
+
+Løkka går så lenge begge lever. Etterpå returnerer funksjonen `True` (spilleren vant) eller `False` (spilleren tapte). Ved ugyldig valg bruker vi `continue`, slik at spilleren blir spurt på nytt uten at fienden får en gratis runde.
+
+### Koble kampen til kartet
+
+I hovedløkka sjekker vi om spilleren har gått på en fiende etter hvert trekk:
+
+```python
+if game_map.has_enemy(spiller.row, spiller.col):
+    fiende = Enemy("Goblin", 15)
+    if fight(spiller, fiende):
+        game_map.remove_enemy(spiller.row, spiller.col)
+    else:
+        print("Spillet er over.")
+        break
+```
+
+Legg merke til at kartet fortsatt bare inneholder tall. `Enemy`-objektet lages først **når kampen starter**. Det fungerer her fordi alle fiendene er like, og fordi cellen blir gulv etter at du har vunnet. Skal fiendene være forskjellige, eller skal en fiende huske skaden den har fått, må objektet ligge i kartet (se neste del).
+
+Spilleren beholder HP-en sin mellom kampene. Har du lite HP igjen etter første goblin, går du inn i neste kamp svekket.
+
+---
+
+## 6. Versjon 3: pikselgrafikk med rich-pixels
+
+I [main-v3.py](main-v3.py) er spillet det samme som i v2, men kartet og kampene tegnes med fargede ruter i terminalen:
+
+- Kartet: gulv er grått, vegger er svarte, fiender er røde og spilleren er grønn.
+- I kampen står spilleren og goblinen på bakken ved siden av hverandre. Den som dør, blir tegnet liggende.
+
+All tegning skjer i klassen `Graphics` i en egen fil, [graphics.py](graphics.py). `main-v3.py` henter den med `from graphics import Graphics`, akkurat som i [importering](../importering/README.md).
+
+### Tegne med bokstaver
+
+rich-pixels har en metode, `Pixels.from_ascii(tekst, mapping)`, som går gjennom en tekst tegn for tegn og bytter hvert tegn ut med noe annet. Vi bytter hver bokstav ut med en farget rute. En figur er derfor bare en liste med tekstlinjer:
+
+```python
+SPILLER = [
+    "...HHH...",   # H = hud
+    "...KHK...",   # K = øyne
+    "...HHH...",
+    "..GGGGG..",   # G = grønn trøye
+    ".H.GGG.H.",
+    "...B.B...",   # B = blå bukse
+    "...B.B...",
+]
+```
+
+Og hvilken farge hver bokstav skal ha, står i en dictionary:
+
+```python
+FIGURFARGER = {
+    "H": "#f1c27d",  # hud
+    "K": "#000000",  # øyne
+    "G": "#00b000",  # grønn trøye
+    ...
+}
+```
+
+`.` betyr gjennomsiktig, altså ingen farge. Hver rute tegnes som **to** mellomrom med bakgrunnsfarge, fordi et tegn i terminalen er omtrent dobbelt så høyt som det er bredt. Med to tegn blir rutene nesten kvadratiske.
+
+Fargene er skrevet som hex-koder (`#rrggbb`), som du kanskje kjenner fra CSS. Vil du ha andre farger eller nye figurer, endrer du bare tekstene og dictionaryene øverst i `graphics.py`.
+
+### Klassen `Graphics`
+
+| Metode | Hva den gjør |
+| --- | --- |
+| `draw_map(game_map, player)` | Tegner kartet, med spilleren som en grønn rute |
+| `draw_fight(player, enemy)` | Tegner spilleren og fienden ved siden av hverandre, levende eller døde |
+| `draw_sprite(sprite)` | Tegner én figur, f.eks. `graphics.draw_sprite(SPILLER)` (kan brukes etter behov) |
+| `_draw(text, colors)` | Hjelpemetode som de andre bruker. Gjør om bokstaver til farger og skriver ut |
+
+Understreken i `_draw` er en vanlig måte å si «denne metoden er bare ment for bruk inne i klassen».
+
+`draw_fight` velger figur ut fra om karakteren lever:
+
+```python
+if player.is_alive():
+    left = SPILLER
+else:
+    left = SPILLER_DØD
+```
+
+Deretter limes figurene sammen linje for linje, med litt luft imellom og en linje med bakke (`g`) under. Det fungerer fordi alle figurene er like store (9 × 7 ruter). De døde figurene har tomme linjer øverst, slik at de ligger nede på bakken.
+
+### Hva ble endret i `main-v3.py`?
+
+Ikke mye, og det er hele poenget:
+
+- `Map.show()` er fjernet. `Map` vet hva som ligger på kartet, og `Graphics` vet hvordan det skal **se ut**. Når hver klasse har sin egen oppgave, kan du bytte ut grafikken uten å røre spillogikken.
+- `graphics.draw_map(game_map, spiller)` erstatter `game_map.show(spiller)`.
+- `fight()` tar imot `graphics` og kaller `graphics.draw_fight(player, enemy)` i starten av hver runde, og én gang til etter kampen, når en av dem ligger død.
+
+> **Tips:** Svarte vegger kan bli vanskelige å se hvis terminalen har mørk bakgrunn. Bytt til en annen farge i `KARTFARGER` om du vil.
+
+---
+
 ## Trenger vi en egen klasse for celler?
 
 Ikke i dette eksempelet. Så lenge en celle bare er «gulv», «hindring» eller «fiende», holder det med et tall.
 
-En `Cell`-klasse blir nyttig når cellene skal **huske noe**, for eksempel:
+En `Cell`-klasse blir nyttig (men ikke nødvendig) når cellene skal **huske noe**, for eksempel:
 
 - en fiende som har egne HP og kan dø (da kan cellen inneholde et `Enemy`-objekt)
 - en kiste som er åpnet eller ikke
@@ -119,5 +263,12 @@ Dette er bare **én** måte å gjøre det på. Noen ting du kan prøve, eller gj
 - Legg til flere celletyper, f.eks. `3` for en skatt eller en dør.
 - Bytt ut tallene med bokstaver (`"."`, `"#"`, `"E"`) så kartet blir lettere å lese.
 - Hva skal skje når du går på en fiende? Kan du koble dette til `Player` og `Enemy` fra [dungeon_crawler_rpg](../dungeon_crawler_rpg/README.md)?
+- I `main-v2.py` kan du heale så mye du vil. Gi spilleren et begrenset antall healing-drikker i stedet.
+- Gi fiendene ulike navn og styrke, f.eks. ved å la tallet `3` bety en sterkere fiende.
+- Gjør det mulig å vinne spillet: skriv en melding og avslutt når alle fiendene er beseiret.
+- La fienden også velge mellom flere handlinger, for eksempel tilfeldig med `random.choice`.
+- Lag din egen figur i `graphics.py`, f.eks. en skattekiste, og tegn den med `draw_sprite` når spilleren finner en skatt.
+- Gi spilleren en annen figur når den forsvarer seg (med skjold) eller healer.
+- Tøm skjermen før hver tegning med `graphics.console.clear()`, så det ser mer ut som et spill og mindre som en logg.
 - Les kartet fra en tekstfil i stedet for å skrive det i koden.
 - Flytt klassene til en egen fil, slik som i [importering](../importering/README.md).
