@@ -80,21 +80,30 @@ class Graphics:
     def _draw(self, text, colors):
         # Gjør om fargene til Segment-er: to mellomrom med bakgrunnsfarge.
         # To tegn per rute gjør rutene omtrent kvadratiske i terminalen.
+        # "." får to mellomrom uten farge, altså en gjennomsiktig rute
         mapping = {".": Segment("  ")}
+        # Resten av tegnene får to mellomrom med bakgrunnsfargen sin,
+        # f.eks. blir "1" til to svarte mellomrom med KARTFARGER
         for char, color in colors.items():
             mapping[char] = Segment("  ", Style(bgcolor=color))
 
+        # from_ascii slår opp hvert tegn i text i mapping og bytter det ut
+        # med segmentet, så skriver console.print resultatet til terminalen
         self.console.print(Pixels.from_ascii(text, mapping))
 
     def draw_map(self, game_map, player):
+        # Bygger opp kartet som én tekststreng, ett tegn per rute
         text = ""
         for row in range(game_map.height):
             for col in range(game_map.width):
+                # Står spilleren her, tegner vi "P" i stedet for det som er i ruta
                 if row == player.row and col == player.col:
                     text += "P"
                 else:
+                    # Tallet i rutenettet gjøres om til tekst, f.eks. 1 -> "1"
                     text += str(game_map.grid[row][col])
-            text += "\n"
+            text += "\n"  # ny linje etter hver rad
+        # Hvert tegn byttes ut med fargen sin fra KARTFARGER
         self._draw(text, KARTFARGER)
 
     def draw_sprite(self, sprite):
@@ -120,3 +129,67 @@ class Graphics:
         lines.append("g" * len(lines[0]))  # bakken under begge
 
         self._draw("\n".join(lines), FIGURFARGER)
+
+
+# Testkode: kjører bare når du starter denne fila direkte (python graphics.py),
+# ikke når en annen fil gjør "from graphics import Graphics".
+if __name__ == "__main__":
+
+    # Enkle stand-in-klasser med akkurat det Graphics trenger.
+    # I spillet bruker du de ekte Map-, Player- og Enemy-klassene i stedet.
+    class TestMap:
+        def __init__(self, grid):
+            self.grid = grid
+            self.height = len(grid)
+            self.width = len(grid[0])
+
+    class TestPlayer:
+        def __init__(self, row, col, hp):
+            self.row = row
+            self.col = col
+            self.hp = hp
+
+        def is_alive(self):
+            return self.hp > 0
+
+    class TestEnemy:
+        def __init__(self, hp):
+            self.hp = hp
+
+        def is_alive(self):
+            return self.hp > 0
+
+    graphics = Graphics()
+
+    # 1) draw_sprite: tegner én figur
+    print("draw_sprite(SPILLER):")
+    graphics.draw_sprite(SPILLER)
+
+    print("draw_sprite(GOBLIN):")
+    graphics.draw_sprite(GOBLIN)
+
+    # 2) draw_map: tegner kartet med spilleren som en grønn rute
+    #    0 = gulv, 1 = vegg, 2 = fiende
+    grid = [
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 2, 1],
+        [1, 0, 1, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1],
+    ]
+    game_map = TestMap(grid)
+    player = TestPlayer(row=1, col=1, hp=10)
+
+    print("draw_map(game_map, player):")
+    graphics.draw_map(game_map, player)
+
+    # 3) draw_fight: tegner spiller og fiende ved siden av hverandre.
+    #    Figuren som har hp <= 0, tegnes som død.
+    print("draw_fight: begge lever")
+    graphics.draw_fight(player, TestEnemy(hp=5))
+
+    print("draw_fight: goblinen er død")
+    graphics.draw_fight(player, TestEnemy(hp=0))
+
+    print("draw_fight: spilleren er død")
+    graphics.draw_fight(TestPlayer(row=1, col=1, hp=0), TestEnemy(hp=5))
